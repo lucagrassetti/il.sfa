@@ -1,0 +1,26 @@
+---
+title: "True Fiexed Effects Stochastic Frontier Models Estimation Using il.sfa Package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{il_sfa_Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(il.sfa)
+```
+
+## Estimating TFE SFM via integrated likelihood
+
+
+## Developing a simulation study using il.sfa function
+
+

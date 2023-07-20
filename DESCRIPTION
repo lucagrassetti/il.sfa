@@ -1,0 +1,28 @@
+Package: il.sfa
+Type: Package
+Title: Integrated Likelihood Stochastic Frontier Model Analysis
+Version: 0.1.0
+Author: Ruggero Bellio and Luca Grassetti
+Maintainer: Luca Grassetti - University of Udine <luca.grassetti@uniud.it>
+Description: This package is a software companion for the paper Bellio and Grassetti (2023) "bla bla bla".
+    The functions included in the package il.sfa allows to reproduce the simulations included in the paper. 
+    The il.sfa(.) function is used to fit a give set of SF models considering the integrated likelihood approach described in the cited reference.
+    The DGP() function reproduce the simulation process described in Belotti et al. (????) and also used in Bellio and Grassetti (2023).
+    The package also includes a specific dataset collecting the estimation results obtained using Stata. In particular, sftfe function is used on a simulation set obtained using the DGP function included in the preent package.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    lme4,
+    numDeriv,
+    Rcpp (>= 1.0.11),
+    statmod,
+    ucminf
+LinkingTo: Rcpp
+Depends: 
+    R (>= 2.10)
+RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

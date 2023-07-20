@@ -1,0 +1,74 @@
+#' The Data Generating Process used in the development of simulation studies.
+#'
+#' The DGP is defined as
+#' $$y_{it} = alpha_i + x_{it}^Tbeta - u_{it} + v_{it}$$
+#' where $u_it$ can be Half-Normal or Exponential and in this last case can also consider the mean of the Exponential distirbution as
+#' $$lambda_{it} = gamma_0 + gamma_1 z_{it}$$.
+#' This last definition also brings to time constant case if $z_{it}$ is considered constant over time.
+#'
+#' @param n the cross-sectional dimension
+#' @param m the time dimension
+#' @param param the vector of model parameters (the frontier regression parameters - beta, the idiosyncratic error variance - sigma_v, the vector of the parameters describing the efficiency behaviour - gamma)
+#' @param model the kind of distribution considered to generate the efficiency related terms
+#' @param seed.val the seed value used to make the simulations reproducible
+#' @param nsim an integer indicating the number of simulated dataset
+#' @param zvar a logical idenfying the case in which the efficiency is time variant
+#'
+#' @return a list including the simulated y vectors (a matrix of dimension nsim X n*m) and the defined: matrix of efficiency related terms (datu), matrix of independent variables, the vector of grouping identifiers and the variable influencing the efficiency level.
+#'
+#' @examples
+#' ### Setting di Table 1, (a) lambda = 1 Belotti TFE - N=100, T=5
+#' ### The example is limited to 100 replications to make the code
+#' ### fairly executable but changing the nsim parameter one can consider the
+#' ### original simulation with 1000 replications.
+#'
+#' N <- 100
+#' T <- 5
+#' para <- c(1,-1.5,1,0.25)
+#' nsimul <- 100
+#' dat <- DGP(N, T, list(beta=para[1], sigmav=para[4], gamma=para[2:3]), model = "Exp",
+#'            seed.val = 22, nsim = nsimul)
+#' res100 <- matrix(0, nrow = nsimul, ncol=4)
+#' for(i in 1:nrow(res100)){
+#'   print(i)
+#'   mydat <- list(y = dat$daty[i,], x = data.frame(dat$x), g = dat$g, z = dat$datz)
+#'   mle <- il_sfa(X = mydat$x, y = mydat$y, distr = "Exp", het = TRUE, z = mydat$z,
+#'                 group = mydat$g, useHess = TRUE)
+#'   res100[i,] <- mle$par
+#'   }
+#'   # Compute the MSE of the estimates
+#'   for(i in 1:4) print(MSE(res100[,i], para[i]))
+#'   # Compare them with the estimated values included in the
+#'   # package data (res_N100_Stata.rda)
+#'   data(res_N100_Stata)
+#'   for(i in 1:4) print(MSE(res_N100_Stata[1:nsimul,i], para[i]))
+#'
+#' @export
+DGP <- function(n, m, param, model = "HN", seed.val = 0, nsim = 1000, zvar = FALSE)
+{
+  g <- sort(rep(1:n, m))
+  daty <- datu <- matrix(NA, nrow = nsim, ncol = n * m)
+  set.seed(seed.val)
+  alpha <- rnorm(n)
+  w <- rnorm(n * m)
+  beta <- param$beta
+  s2v <- param$sigmav^2
+  x <- 0.5 * alpha[g] + sqrt(0.5^2) * w
+  z <- if (zvar) rnorm(n * m, sqrt(0.0625)) else rnorm(n, sqrt(0.0625))[g]
+  for(i in 1:nsim) {
+    if(model == "HN")  {
+      s2u <- param$sigmau^2
+      sigma <- sqrt(s2u + s2v)
+      lambda <- param$sigmau / param$sigmav
+      u <- abs(rnorm(n * m, sd = sqrt(s2u)))
+    }
+    if(model == "Exp")  {
+      su <- exp(param$gamma[1] +  param$gamma[2] * z)
+      u <- rexp(n *m, rate = 1 / su)
+    }
+    daty[i,] <-  alpha[g] + x * beta + rnorm(n * m, sd = sqrt(s2v)) - u
+    datu[i,] <- u
+  }
+  return(list(daty = daty, datu = datu, x = as.matrix(x, ncol = 1), g = g, datz = z))
+}
+
