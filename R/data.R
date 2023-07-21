@@ -1,6 +1,9 @@
-#' Results from the Stata estimation function using PDE method
+#' Estimation results from Stata (a comparison set of estimates)
 #'
-#' Contains the estimation results of the 1000 replications of the simulation experiment also developed in this package
+#' Contains the estimation results of the 1000 replications of the simulation experiment
+#' discussed in the reference paper Bellio and Grassetti (2023). Otained using the default
+#' arguments of DGP(.) The reported results refer to a heteroschedastic exponential SFM.
+#' They are obtained using sftfe function and the PDE method
 #'
 #' @format A data frame with 1000 rows and 4 variables (the model parameters)
 #'  \describe{
@@ -10,7 +13,8 @@
 #'      \item{b4}{The idiosyncratic error variance}
 #'      }
 #'
-#' @source {Stata estimation results obtained considering the DGP described in the paper}
+#' @source {Stata estimation results obtained considering the DGP described in the paper.
+#' N = 100, T = 5, beta = 1, gamma_0 = 1.5, gamma_1 = 1 and sigma_v = 0.25}
 #'
 #' @examples
 #' data(res_N100_Stata)

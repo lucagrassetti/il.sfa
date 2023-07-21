@@ -5,10 +5,11 @@ Version: 0.1.0
 Author: Ruggero Bellio and Luca Grassetti
 Maintainer: Luca Grassetti - University of Udine <luca.grassetti@uniud.it>
 Description: This package is a software companion for the paper Bellio and Grassetti (2023) "Efficient estimation of true fixed-effects stochastic frontier models".
-    The functions included in the package il.sfa allows to reproduce the simulations included in the paper. 
-    The il.sfa(.) function is used to fit a give set of SF models considering the integrated likelihood approach described in the cited reference.
-    The DGP() function reproduce the simulation process described in Belotti and Ilardi (2018) "Consistent inference in fixed-effects stochastic frontier models" and also used in Bellio and Grassetti (2023).
-    The package also includes a specific dataset collecting the estimation results obtained using Stata command "sftfe" (including the models discussed in Belotti et al. (2013) "Stochastic frontier analysis using Stata"). In particular, sftfe function is used on a simulation set obtained using the DGP function included in the preent package.
+    The included functions allow to reproduce the simulations included in the paper and estimate all the models discussed in it. 
+    Inparticular, The il.sfa(.) function is used to fit a given set of SF models considering the integrated likelihood approach described in the cited reference.
+    The DGP(.) function can be used to mimic the simulation process described in Belotti and Ilardi (2018) "Consistent inference in fixed-effects stochastic frontier models" and also used in Bellio and Grassetti (2023).
+    The package also includes a specific dataset collecting the results obtained using Stata command "sftfe" (including the models discussed in Belotti et al. (201) "Stochastic frontier analysis using Stata"). 
+    In particular, sftfe function is used on a simulated dataset generated via DGP function which is also used to manage the simulation studies.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
