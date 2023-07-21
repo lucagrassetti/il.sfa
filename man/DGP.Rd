@@ -26,15 +26,10 @@ a list including the simulated y vectors (a matrix of dimension nsim X n*m) and 
 }
 \description{
 The DGP is defined as
-}
-\details{
 \deqn{y_{it} = \alpha_i + x_{it}^T \beta - u_{it} + v_{it}}
-
 where \deqn{u_it} can be Half-Normal or Exponential and in this last
 case can also consider the mean of the Exponential distirbution as
-
 \deqn{lambda_{it} = gamma_0 + gamma_1 z_{it}}.
-
 This last definition also brings to time-constant cases when
 \deqn{z_{it}} is considered constant over time.
 }

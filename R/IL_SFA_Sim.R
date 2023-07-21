@@ -1,14 +1,10 @@
 #' The Data Generating Process used in the development of simulation studies.
 #'
 #' The DGP is defined as
-#'
 #' \deqn{y_{it} = \alpha_i + x_{it}^T \beta - u_{it} + v_{it}}
-#'
 #' where \deqn{u_it} can be Half-Normal or Exponential and in this last
 #' case can also consider the mean of the Exponential distirbution as
-#'
 #' \deqn{lambda_{it} = gamma_0 + gamma_1 z_{it}}.
-#'
 #' This last definition also brings to time-constant cases when
 #' \deqn{z_{it}} is considered constant over time.
 #'
