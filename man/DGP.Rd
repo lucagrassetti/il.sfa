@@ -7,37 +7,51 @@
 DGP(n, m, param, model = "HN", seed.val = 0, nsim = 1000, zvar = FALSE)
 }
 \arguments{
-\item{n}{the cross-sectional dimension}
+\item{n}{the cross-sectional dimension.}
 
-\item{m}{the time dimension}
+\item{m}{the time dimension.}
 
-\item{param}{the vector of model parameters (the frontier regression parameters - beta, the idiosyncratic error variance - sigma_v, the vector of the parameters describing the efficiency behaviour - gamma)}
+\item{param}{the vector of model parameters (the frontier regression parameters - \eqn{\beta},
+the idiosyncratic error variance - \eqn{\sigma_v},
+the vector of the parameters describing the efficiency behaviour - \eqn{\gamma}).}
 
-\item{model}{the kind of distribution considered to generate the efficiency related terms}
+\item{model}{the kind of distribution considered to generate the efficiency related terms.}
 
-\item{seed.val}{the seed value used to make the simulations reproducible}
+\item{seed.val}{the seed value used to make the simulations reproducible.}
 
-\item{nsim}{an integer indicating the number of simulated dataset}
+\item{nsim}{an integer indicating the number of simulated dataset.}
 
-\item{zvar}{a logical idenfying the case in which the efficiency is time variant}
+\item{zvar}{a logical idenfying the case in which the efficiency is time variant.}
 }
 \value{
-a list including the simulated y vectors (a matrix of dimension nsim X n*m) and the defined: matrix of efficiency related terms (datu), matrix of independent variables, the vector of grouping identifiers and the variable influencing the efficiency level.
+a list object including:
+
+-- the simulated y vectors (a matrix daty of dimension \eqn{nsim \times n\cdot m}),
+
+-- the simulated of efficiency related terms (a matrix datu of dimension \eqn{nsim \times n\cdot m}),
+
+-- the simulated of independent variables (a matrix \eqn{x} of dimension \eqn{n\cdot m \times p}),
+
+-- the simulated of grouping identifiers (a vector \eqn{g} of length \eqn{n\cdot m}), and
+
+-- the simulated values of the variable influencing the efficiency level (a vector \eqn{datz} of length \eqn{n\cdot m}).
 }
 \description{
 The DGP is defined as
 \deqn{y_{it} = \alpha_i + x_{it}^T \beta - u_{it} + v_{it}}
-where \deqn{u_it} can be Half-Normal or Exponential and in this last
+where \eqn{u_{it}} can be Half-Normal or Exponential and in this last
 case can also consider the mean of the Exponential distirbution as
-\deqn{lambda_{it} = gamma_0 + gamma_1 z_{it}}.
+\deqn{\lambda_{it} = \gamma_0 + \gamma_1 z_{it}.}
 This last definition also brings to time-constant cases when
-\deqn{z_{it}} is considered constant over time.
+\eqn{z_{it}} is considered constant over time.
 }
 \examples{
-### Setting di Table 1, (a) lambda = 1 Belotti TFE - N=100, T=5
-### The example is limited to 100 replications to make the code
-### fairly executable but changing the nsim parameter one can consider the
-### original simulation with 1000 replications.
+# This code reproduce the results in Table 1 panel (a)
+# Belotti and Ilardi (2018) "Consistent inference in fixed-effects
+# stochastic frontier models" - N=100, T=5.
+# The example is limited to 100 replications to make the code
+# fairly executable. Changing the nsim parameter, one can consider the
+# original simulation with 1000 replications.
 
 N <- 100
 T <- 5
@@ -60,4 +74,11 @@ for(i in 1:nrow(res100)){
   data(res_N100_Stata)
   for(i in 1:4) print(MSE(res_N100_Stata[1:nsimul,i], para[i]))
 
+}
+\references{
+Belotti, F., & Ilardi, G. (2018). Consistent inference in
+fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
+
+Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
+fixed-effects stochastic frontier models. WP
 }

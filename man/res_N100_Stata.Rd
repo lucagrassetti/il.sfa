@@ -29,4 +29,8 @@ They are obtained using sftfe function and the PDE method
 \examples{
 data(res_N100_Stata)
 }
+\references{
+Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
+fixed-effects stochastic frontier models. WP
+}
 \keyword{datasets}

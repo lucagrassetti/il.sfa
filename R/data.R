@@ -16,6 +16,9 @@
 #' @source {Stata estimation results obtained considering the DGP described in the paper.
 #' N = 100, T = 5, beta = 1, gamma_0 = 1.5, gamma_1 = 1 and sigma_v = 0.25}
 #'
+#' @references Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
+#' fixed-effects stochastic frontier models. WP
+#'
 #' @examples
 #' data(res_N100_Stata)
 "res_N100_Stata"
