@@ -29,7 +29,7 @@ efficient. The present vignette focuses on the usage of
 
 ## Estimating TFE SFM via IL
 
-The il_sfa function allows estimating the frontier model defined in Belotti and Ilardi (2018) and 
+The `il_sfa` function allows estimating the frontier model defined in Belotti and Ilardi (2018) and 
 Bellio and Grassetti (2023), by using a feasible, generalizable and computationally efficient approach 
 based on the integrated likelihood. In particular, the integrated likelihood approach works 
 integrating-out the panel-specific intercepts from the likelihood function, solving the
@@ -62,7 +62,7 @@ general marginal log-likelihood for $\theta = \left\{\beta, \sigma\right\}$ can 
 where $f(y_i;\alpha_i, \theta)$ is the density function of
 $y_i$.
 
-Mimicking the Data Generating Process introduced in Belotti and Ilardi (2018) we can generate one single 
+Mimicking the Data Generating Process introduced in Belotti and Ilardi (2018), we can generate one single 
 dataset with the setting used in Table 1, namely $N=100$, $T=5$, $\beta = 1$, $\gamma_0 = -1.5$,
 $\gamma_1 = 1$, and $\sigma_v = 0.25$. A small number of replications (10) are considered here.
 
@@ -125,7 +125,7 @@ mle <- il_sfa(X = mydat$x, y = mydat$y, distr = "HN", het = TRUE, z = mydat$z,
               group = mydat$g, useHess = TRUE)
 ```
 
-## Developing a simulation study using ilsfa and DGP functions
+## Developing a simulation study using `il_sfa` and `DGP` functions
 
 The DGP function can be used to generate data for a simulation study. 
 The following steps can be used to reproduce the results in Table 1 panel (a)
