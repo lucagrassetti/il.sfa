@@ -1,36 +1,35 @@
-#' True Fixed Effects Stochastic Frontier Model estimation via Integrated Likelihood .
+#' True Fixed Effects Stochastic Frontier Model estimation via Integrated Likelihood.
 #'
 #' This function adopts the IL approach to the estimation of some kind of SF models
 #' (see Bellio and Grassetti, 2023) such
 #' as those based on N-HN and N-Exponential error terms convolutions.
-#' The function adopt an consistent and computationally efficient approach to the
+#' The function adopts a consistent and computationally efficient approach to the
 #' model estimation.
 #' The model specification is as
 #' \deqn{y_{ij} = \alpha_i + x_{it}^T\beta - u_{it} + v{it},}
-#' where the efficiency related error term can be estimated as \eqn{u_{it} \sim HN(0, \sigma_u^2)},
+#' where the efficiency-related error term can be estimated as \eqn{u_{it} \sim HN(0, \sigma_u^2)},
 #' \eqn{u_{it} \sim Exp(\sigma_u^2)}, or \eqn{u_{it} \sim Exp(\sigma_{ui}^2)} and
 #' \eqn{\sigma_{ui} = e^{\gamma_0+\gamma_1z_i}}.
-#' The idiosyncratic error term is considered gaussian and homoschedastic.
+#' The idiosyncratic error term is considered Gaussian and homoscedastic.
 #'
 #' @param X the matrix of independent variables.
-#' @param y the vector of response variable.
-#' @param distr the distributional form of the efficiency related error terms (default is Exp).
-#' @param het a logical indicating the case of heteroschedastic efficiency related error
-#' terms (default is TRUE but it works for the Exponential case only).
-#' @param z the matrix of variables influencing the efficiency.
-#' @param group the vector of grouping variable.
+#' @param y the vector of the response variable.
+#' @param distr the distributional form of the efficiency-related error terms (default is Exp).
+#' @param het a logical indicating the case of heteroscedastic efficiency related error
+#' terms (default is TRUE, but it works for the Exponential case only).
+#' @param z the vector of values of the variable influencing the efficiency (for the Exponential case only).
+#' @param group the vector of the grouping variable defining the panel.
 #' @param nq the number of quadrature points used in the numerical integration routine (default is 25).
-#' @param niter the number of iterations used in the numerical integration routine (default is 10).
-#' @param init the vector of initial values for integrated likelihood parameters.
-#' @param useHess a logical: if TRUE the likelihood maximization is initialized with the numerical
-#' Hessian otherwise the Hessian is initialized as a unit diagonal.
-#' @param trace trace parameter used in ucminf function (if trace is positive then
+#' @param niter the number of iterations used in the numerical integration routine for locating the mode (default is 10).
+#' @param init the optional vector of initial values for the maximization of integrated likelihood (default is NULL).
+#' @param useHess a logical: if TRUE, the likelihood maximization is initialized with the numerical
+#' Hessian otherwise, the Hessian is initialized as a unit diagonal.
+#' @param trace trace parameter used in ucminf function (if trace is positive, then
 #' detailed tracing information is printed for each iteration).
 #' @param grtol grtol parameter used in ucminf function (the algorithm stops when
 #' the largest absolute value of the gradient is less than grtol).
-#' @param grad grad parameter used in ucminf function (Controls the type
-#' of finite difference approximation to be used for the gradient if no gradient
-#' function is given in the input argument 'gr').
+#' @param grad grad parameter used in ucminf function (controls the type
+#' of finite difference approximation to be used for the gradient).
 #'
 #' @return A list including
 #' @return -- the parameters point estimates - \eqn{par},
@@ -42,7 +41,7 @@
 #' @references Belotti, F., & Ilardi, G. (2018). Consistent inference in
 #' fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
 #' @references Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
-#' fixed-effects stochastic frontier models. WP
+#' fixed-effects stochastic frontier models. Submitted
 #'
 #' @examples
 #' # Generate one single dataset with the setting used in Table 1, (a)
