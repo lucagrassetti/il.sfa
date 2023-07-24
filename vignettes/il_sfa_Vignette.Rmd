@@ -146,7 +146,7 @@ dat <- DGP(N, T, list(beta=para[1], sigmav=para[4], gamma=para[2:3]), model = "E
 
 The estimation results can then be obtained on the simulated dataset saving the point estimates only.
 
-```{r , cache = TRUE}
+```{r }
 res <- matrix(0, nrow = nsimul, ncol=4)
 for(i in 1:nrow(res)){
 #  print(i)
@@ -168,7 +168,7 @@ benchmark identified with the results of Belotti and Illardi (2018). These resul
 obtained for the same generated datasets in Stata using `sftfe` function and adopting 
 the `PDE` method. The results are collected in the package dataset called `res_N100_Stata.rda`.
 
-```{r , cache = FALSE}
+```{r }
 data(res_N100_Stata)
 
 for(i in 1:4) print(MSE(res_N100_Stata[1:nsimul,i], para[i]))
