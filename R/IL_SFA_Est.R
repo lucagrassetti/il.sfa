@@ -23,7 +23,7 @@
 #' @param niter the number of iterations used in the numerical integration routine for locating the mode (default is 10).
 #' @param init the optional vector of initial values for the maximization of integrated likelihood (default is NULL).
 #' @param useHess a logical: if TRUE, the likelihood maximization is initialized with the numerical
-#' Hessian otherwise, the Hessian is initialized as a unit diagonal.
+#' Hessian; otherwise, the Hessian is initialized as a unit diagonal.
 #' @param trace trace parameter used in ucminf function (if trace is positive, then
 #' detailed tracing information is printed for each iteration).
 #' @param grtol grtol parameter used in ucminf function (the algorithm stops when
