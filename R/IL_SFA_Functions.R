@@ -1,39 +1,6 @@
-# Da fare:
-# metti in ordine anche le altre funzioni oltre a exp per il calcolo di tutto
-# sistema gli essiani creando un paio di funzioni farlocche peril solo calcolo degli essiani.
-
-##### Functions for IL estimation
-
 MSE <- function(x, para) mean( (x-para)^2)
 
-# DGP <- function(n, m, param, model = "HN", seed.val = 0, nsim = 1000, zvar = FALSE)
-# {
-#     g <- sort(rep(1:n, m))
-#     daty <- datu <- matrix(NA, nrow = nsim, ncol = n * m)
-#     set.seed(seed.val)
-#     alpha <- rnorm(n)
-#     w <- rnorm(n * m)
-#     beta <- param$beta
-#     s2v <- param$sigmav^2
-#     x <- 0.5 * alpha[g] + sqrt(0.5^2) * w
-#     z <- if (zvar) rnorm(n * m, sqrt(0.0625)) else rnorm(n, sqrt(0.0625))[g]
-#     for(i in 1:nsim) {
-#         if(model == "HN")  {
-#           s2u <- param$sigmau^2
-#           sigma <- sqrt(s2u + s2v)
-#           lambda <- param$sigmau / param$sigmav
-#           u <- abs(rnorm(n * m, s = sqrt(s2u)))
-#           }
-#         if(model == "Exp")  {
-#            su <- exp(param$gamma[1] +  param$gamma[2] * z)
-#            u <- rexp(n *m, rate = 1 / su)
-#         }
-#         daty[i,] <-  alpha[g] + x * beta + rnorm(n * m, s = sqrt(s2v)) - u
-#         datu[i,] <- u
-#        }
-#     return(list(daty = daty, datu = datu, x = as.matrix(x, ncol = 1), g = g, datz = z))
-# }
-#
+##### Functions for IL estimation
 
 ##########################################################################
 #    HN case
