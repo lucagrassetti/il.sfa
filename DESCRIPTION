@@ -1,4 +1,4 @@
-Package: il.sfa
+Package: ilsfa
 Type: Package
 Title: Integrated Likelihood Stochastic Frontier Model Analysis
 Version: 0.1.0
