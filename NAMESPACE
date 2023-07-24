@@ -1,4 +1,4 @@
 exportPattern("^[[:alpha:]]+")
 importFrom(Rcpp, evalCpp)
-useDynLib(il.sfa, .registration = TRUE)
+useDynLib(ilsfa, .registration = TRUE)
 importFrom("stats", "rexp", "rnorm")
