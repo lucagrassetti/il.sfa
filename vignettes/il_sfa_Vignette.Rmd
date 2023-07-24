@@ -140,7 +140,7 @@ The estimation results can then be obtained on the simulated dataset saving the 
 
 ```{r , cache = TRUE}
 res <- matrix(0, nrow = nsimul, ncol=4)
-for(i in 1:nrow(res100)){
+for(i in 1:nrow(res)){
 #  print(i)
   mydat <- list(y = dat$daty[i,], x = data.frame(dat$x), g = dat$g, z = dat$datz)
   mle <- il_sfa(X = mydat$x, y = mydat$y, distr = "Exp", het = TRUE, z = mydat$z,
@@ -152,7 +152,7 @@ for(i in 1:nrow(res100)){
 The obtained matrix can be used to compute the Mean Square Error (MSE) using a function included in the `R` source code.
 
 ```{r }
-for(i in 1:4) print(MSE(res100[,i], para[i]))
+for(i in 1:4) print(MSE(res[,i], para[i]))
 ```
 
 To check the goodness of our proposal, we also compared the estimation results with a 
