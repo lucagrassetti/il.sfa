@@ -1,4 +1,4 @@
-# Integrated Likelihood Stochastic Frontier Analysis - `il.sfa`
+# Integrated Likelihood Stochastic Frontier Analysis - `ilsfa`
 
 Software companion for estimating True Fixed Effects Stochastic Frontier Model with an Integrated Likelihood Approach. The source code is given with the typical structure of a package, and the built package can be easily downloaded by
 
