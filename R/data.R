@@ -1,9 +1,9 @@
 #' Estimation results from Stata (a comparison set of estimates)
 #'
 #' Contains the estimation results of the 1000 replications of the simulation experiment
-#' discussed in the reference paper Bellio and Grassetti (2023). Otained using the default
-#' arguments of DGP(.) The reported results refer to a heteroschedastic exponential SFM.
-#' They are obtained using sftfe function and the PDE method
+#' discussed in the reference paper Bellio and Grassetti (2023). Obtained using the default
+#' arguments of DGP(.) The reported results refer to a heteroscedastic exponential SFM.
+#' They are obtained using sftfe function (Belotti et al., 2013) and the PDE method.
 #'
 #' @format A data frame with 1000 rows and 4 variables (the model parameters)
 #'  \describe{
@@ -17,7 +17,9 @@
 #' N = 100, T = 5, beta = 1, gamma_0 = 1.5, gamma_1 = 1 and sigma_v = 0.25}
 #'
 #' @references Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
-#' fixed-effects stochastic frontier models. WP
+#' fixed-effects stochastic frontier models. Submitted.
+#' @references Belotti, F., Daidone, S., Ilardi, G., Atella, V., 2013. Stochastic frontier
+#' analysis using Stata. The Stata Journal 13, 719-758
 #'
 #' @examples
 #' data(res_N100_Stata)
