@@ -32,8 +32,7 @@
 #' fairly executable. Changing the nsim parameter, one can consider the
 #' original simulation with 1000 replications. set.seed = 22 is used to generate the
 #' data analysed with Stata and R and compared in Bellio and Grassetti (2023).
-#' The simulations use a number of replication equal to 1000.
-
+#' In the cited papers, the simulations use a number of replication equal to 1000.
 #' 
 #' @references Belotti, F., & Ilardi, G. (2018). Consistent inference in
 #' fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
@@ -56,12 +55,12 @@
 #'                 group = mydat$g, useHess = TRUE)
 #'   res[i,] <- mle$par
 #'   }
-#'   # Compute the MSE of the estimates
-#'   for(i in 1:4) print(MSE(res[,i], para[i]))
-#'   # Compare them with the estimated values included in the
-#'   # package data (res_N100_Stata.rda)
-#'   data(res_N100_Stata)
-#'   for(i in 1:4) print(MSE(res_N100_Stata[1:nsimul,i], para[i]))
+#' # Compute the MSE of the estimates
+#' for(i in 1:4) print(MSE(res[,i], para[i]))
+#' # Compare them with the estimated values included in the
+#' # package data (res_N100_Stata.rda)
+#' data(res_N100_Stata)
+#' for(i in 1:4) print(MSE(res_N100_Stata[1:nsimul,i], para[i]))
 #'
 #' @export
 DGP <- function(n, m, param, model = "HN", seed.val = 0, nsim = 1000, zvar = FALSE)
