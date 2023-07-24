@@ -1,10 +1,10 @@
-#' The Data Generating Process used in the development of simulation studies.
+#' The Data Generating Process used in the simulation studies.
 #'
 #' The DGP is defined as
 #' \deqn{y_{it} = \alpha_i + x_{it}^T \beta - u_{it} + v_{it}}
 #' where \eqn{u_{it}} can be Half-Normal or Exponential and in this last
-#' case can also consider the mean of the Exponential distirbution as
-#' \deqn{\lambda_{it} = \gamma_0 + \gamma_1 z_{it}.}
+#' case can also consider the mean of the Exponential distribution as
+#' \deqn{\lambda_{it} = exp\left\(\gamma_0 + \gamma_1 z_{it}.\right\)}
 #' This last definition also brings to time-constant cases when
 #' \eqn{z_{it}} is considered constant over time.
 #'
@@ -13,14 +13,14 @@
 #' @param param the vector of model parameters (the frontier regression parameters - \eqn{\beta},
 #' the idiosyncratic error variance - \eqn{\sigma_v},
 #' the vector of the parameters describing the efficiency behaviour - \eqn{\gamma}).
-#' @param model the kind of distribution considered to generate the efficiency related terms.
+#' @param model the kind of distribution considered to generate the efficiency-related terms.
 #' @param seed.val the seed value used to make the simulations reproducible.
-#' @param nsim an integer indicating the number of simulated dataset.
-#' @param zvar a logical idenfying the case in which the efficiency is time variant.
+#' @param nsim an integer indicating the number of simulated datasets.
+#' @param zvar a logical identifying the case in which the efficiency is time variant.
 #'
 #' @return a list object including:
 #' @return -- the simulated y vectors (a matrix daty of dimension \eqn{nsim \times n\cdot m}),
-#' @return -- the simulated of efficiency related terms (a matrix datu of dimension \eqn{nsim \times n\cdot m}),
+#' @return -- the simulated of efficiency-related terms (a matrix datu of dimension \eqn{nsim \times n\cdot m}),
 #' @return -- the simulated of independent variables (a matrix \eqn{x} of dimension \eqn{n\cdot m \times p}),
 #' @return -- the simulated of grouping identifiers (a vector \eqn{g} of length \eqn{n\cdot m}), and
 #' @return -- the simulated values of the variable influencing the efficiency level (a vector \eqn{datz} of length \eqn{n\cdot m}).
@@ -28,10 +28,10 @@
 #' @references Belotti, F., & Ilardi, G. (2018). Consistent inference in
 #' fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
 #' @references Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
-#' fixed-effects stochastic frontier models. WP
+#' fixed-effects stochastic frontier models. Submitted
 #'
 #' @examples
-#' # This code reproduce the results in Table 1 panel (a)
+#' # This code reproduces the results in Table 1 panel (a)
 #' # Belotti and Ilardi (2018) "Consistent inference in fixed-effects
 #' # stochastic frontier models" - N=100, T=5.
 #' # The example is limited to 100 replications to make the code
