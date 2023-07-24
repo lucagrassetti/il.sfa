@@ -180,5 +180,5 @@ The estimation results are quite similar, but the IL MSE are always a bit lower 
 ## References
 
 - Belotti, F., & Ilardi, G. (2018). Consistent inference in fixed-effects stochastic frontier models. *Journal of Econometrics*, **202**(2), 161–-177.
-
+- Belotti, F., Daidone, S., Ilardi, G., Atella, V., 2013. Stochastic frontier analysis using Stata. The Stata Journal **13**, 719--758.
 - Bellio, R., & Grassetti, L. (2023). Efficient estimation of true fixed-effects stochastic frontier models. *Working Paper*.
