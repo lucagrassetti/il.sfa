@@ -102,6 +102,14 @@ mle <- il_sfa(X = mydat$x, y = mydat$y, distr = "Exp", het = TRUE, z = mydat$z,
 summary(mle)
 ```
 
+The object created by `il_sfa` includes:
+
+- `par` 
+- `invess` 
+- `se` 
+- `alphai` 
+- `uit` 
+
 In some specific cases, the function fails, when considering the numerical hessian in 
 the initialization of the maximization procedure. The estimation routine considers 
 some checks on this issue, adopting the unit diagonal solution when the initialization 
