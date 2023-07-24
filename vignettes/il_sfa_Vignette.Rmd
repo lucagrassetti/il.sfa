@@ -1,5 +1,5 @@
 ---
-title: "True Fixed Effect Stochastic Frontier Models Estimation via Integrated Likelihood: il.sfa package"
+title: "True Fixed Effect Stochastic Frontier Models Estimation via Integrated Likelihood: ilsfa package"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{il_sfa_Vignette}
@@ -124,7 +124,7 @@ mle <- il_sfa(X = mydat$x, y = mydat$y, distr = "HN", het = TRUE, z = mydat$z,
               group = mydat$g, useHess = TRUE)
 ```
 
-## Developing a simulation study using il.sfa and DGP functions
+## Developing a simulation study using ilsfa and DGP functions
 
 The DGP function can be used to generate data for a simulation study. 
 The following steps can be used to reproduce the results in Table 1 panel (a)
