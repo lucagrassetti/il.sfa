@@ -24,20 +24,23 @@
 #' @return -- the simulated of independent variables (a matrix \eqn{x} of dimension \eqn{n\cdot m \times p}),
 #' @return -- the simulated of grouping identifiers (a vector \eqn{g} of length \eqn{n\cdot m}), and
 #' @return -- the simulated values of the variable influencing the efficiency level (a vector \eqn{datz} of length \eqn{n\cdot m}).
-#'
+#' 
+#' @description This code reproduces the results in Table 1 panel (a)
+#' Belotti and Ilardi (2018) "Consistent inference in fixed-effects
+#' stochastic frontier models" - The sample size is fixed to N=100 and T=5.
+#' The example is limited to 10 replications to make the code
+#' fairly executable. Changing the nsim parameter, one can consider the
+#' original simulation with 1000 replications. set.seed = 22 is used to generate the
+#' data analysed with Stata and R and compared in Bellio and Grassetti (2023).
+#' The simulations use a number of replication equal to 1000.
+
+#' 
 #' @references Belotti, F., & Ilardi, G. (2018). Consistent inference in
 #' fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
 #' @references Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
 #' fixed-effects stochastic frontier models. Submitted
 #'
 #' @examples
-#' # This code reproduces the results in Table 1 panel (a)
-#' # Belotti and Ilardi (2018) "Consistent inference in fixed-effects
-#' # stochastic frontier models" - N=100, T=5.
-#' # The example is limited to 10 replications to make the code
-#' # fairly executable. Changing the nsim parameter, one can consider the
-#' # original simulation with 1000 replications. set.seed = 22 is used to generate the
-#' # data analysed with Stata and R and compared in Bellio and Grassetti (2023).
 #'
 #' N <- 100
 #' T <- 5
