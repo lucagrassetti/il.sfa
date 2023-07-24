@@ -34,26 +34,27 @@
 #' # This code reproduces the results in Table 1 panel (a)
 #' # Belotti and Ilardi (2018) "Consistent inference in fixed-effects
 #' # stochastic frontier models" - N=100, T=5.
-#' # The example is limited to 100 replications to make the code
+#' # The example is limited to 10 replications to make the code
 #' # fairly executable. Changing the nsim parameter, one can consider the
-#' # original simulation with 1000 replications.
+#' # original simulation with 1000 replications. set.seed = 22 is used to generate the 
+#' # data analysed with Stata and R and compared in Bellio and Grassetti (2023). 
 #'
 #' N <- 100
 #' T <- 5
 #' para <- c(1,-1.5,1,0.25)
-#' nsimul <- 100
-#' dat <- DGP(N, T, list(beta=para[1], sigmav=para[4], gamma=para[2:3]), model = "Exp",
+#' nsimul <- 10
+#' dat <- DGP(N, T, list(beta = para[1], sigmav = para[4], gamma = para[2:3]), model = "Exp",
 #'            seed.val = 22, nsim = nsimul)
-#' res100 <- matrix(0, nrow = nsimul, ncol=4)
-#' for(i in 1:nrow(res100)){
+#' res <- matrix(0, nrow = nsimul, ncol=4)
+#' for(i in 1:nrow(res)){
 #'   print(i)
 #'   mydat <- list(y = dat$daty[i,], x = data.frame(dat$x), g = dat$g, z = dat$datz)
 #'   mle <- il_sfa(X = mydat$x, y = mydat$y, distr = "Exp", het = TRUE, z = mydat$z,
 #'                 group = mydat$g, useHess = TRUE)
-#'   res100[i,] <- mle$par
+#'   res[i,] <- mle$par
 #'   }
 #'   # Compute the MSE of the estimates
-#'   for(i in 1:4) print(MSE(res100[,i], para[i]))
+#'   for(i in 1:4) print(MSE(res[,i], para[i]))
 #'   # Compare them with the estimated values included in the
 #'   # package data (res_N100_Stata.rda)
 #'   data(res_N100_Stata)
