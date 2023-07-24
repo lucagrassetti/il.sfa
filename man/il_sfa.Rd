@@ -74,8 +74,8 @@ model estimation.
 The model specification is as
 \deqn{y_{ij} = \alpha_i + x_{it}^T\beta - u_{it} + v{it},}
 where the efficiency-related error term can be estimated as \eqn{u_{it} \sim HN(0, \sigma_u^2)},
-\eqn{u_{it} \sim Exp(\sigma_u^2)}, or \eqn{u_{it} \sim Exp(\sigma_{ui}^2)} and
-\eqn{\sigma_{ui} = e^{\gamma_0+\gamma_1z_i}}.
+\eqn{u_{it} \sim Exp(\sigma_u^2)}, or \eqn{u_{it} \sim Exp(\sigma_{uit}^2)} and
+\eqn{\sigma_{uit} = e^{\gamma_0+\gamma_1z_it}}.
 The idiosyncratic error term is considered Gaussian and homoscedastic.
 }
 \examples{

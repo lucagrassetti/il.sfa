@@ -4,7 +4,7 @@
 #' \deqn{y_{it} = \alpha_i + x_{it}^T \beta - u_{it} + v_{it}}
 #' where \eqn{u_{it}} can be Half-Normal or Exponential and in this last
 #' case can also consider the mean of the Exponential distribution as
-#' \deqn{\lambda_{it} = exp\left\(\gamma_0 + \gamma_1 z_{it}.\right\)}
+#' \deqn{\sigma_{uit} = \exp\left(\gamma_0 + \gamma_1 z_{it}\right).}
 #' This last definition also brings to time-constant cases when
 #' \eqn{z_{it}} is considered constant over time.
 #'
@@ -36,8 +36,8 @@
 #' # stochastic frontier models" - N=100, T=5.
 #' # The example is limited to 10 replications to make the code
 #' # fairly executable. Changing the nsim parameter, one can consider the
-#' # original simulation with 1000 replications. set.seed = 22 is used to generate the 
-#' # data analysed with Stata and R and compared in Bellio and Grassetti (2023). 
+#' # original simulation with 1000 replications. set.seed = 22 is used to generate the
+#' # data analysed with Stata and R and compared in Bellio and Grassetti (2023).
 #'
 #' N <- 100
 #' T <- 5
