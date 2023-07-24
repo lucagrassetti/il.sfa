@@ -165,7 +165,7 @@ for(i in 1:4) print(MSE(res[,i], para[i]))
 
 To check the goodness of our proposal, we also compared the estimation results with a 
 benchmark identified with the results of Belotti and Illardi (2018). These results are 
-obtained for the same generated datasets in Stata using `sftfe` function and adopting 
+obtained for the same generated datasets in Stata using `sftfe` function (Belotti et al., 2013) and adopting 
 the `PDE` method. The results are collected in the package dataset called `res_N100_Stata.rda`.
 
 ```{r }
@@ -180,5 +180,5 @@ The estimation results are quite similar, but the IL MSE are always a bit lower 
 ## References
 
 - Belotti, F., & Ilardi, G. (2018). Consistent inference in fixed-effects stochastic frontier models. *Journal of Econometrics*, **202**(2), 161–-177.
-- Belotti, F., Daidone, S., Ilardi, G., Atella, V., 2013. Stochastic frontier analysis using Stata. The Stata Journal **13**, 719--758.
-- Bellio, R., & Grassetti, L. (2023). Efficient estimation of true fixed-effects stochastic frontier models. *Working Paper*.
+- Belotti, F., Daidone, S., Ilardi, G., Atella, V. (2013). Stochastic frontier analysis using Stata. *The Stata Journal*, **13**, 719--758.
+- Bellio, R., & Grassetti, L. (2023). Efficient estimation of true fixed-effects stochastic frontier models. *Submitted*.
