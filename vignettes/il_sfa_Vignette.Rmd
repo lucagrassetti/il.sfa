@@ -104,11 +104,11 @@ summary(mle)
 
 The object created by `il_sfa` includes:
 
-- `par` 
-- `invess` 
-- `se` 
-- `alphai` 
-- `uit` 
+- `par` the parameters' point estimates,
+- `invess` the inverse of the numerical hessian used to compute the standard errors of the estimated parameters,
+- `se` the standard errors of the estimated parameters,
+- `alphai` the firm-specific effects -- $\alpha_i$
+- `uit` the estimated efficiency-related effects.
 
 In some specific cases, the function fails, when considering the numerical hessian in 
 the initialization of the maximization procedure. The estimation routine considers 
