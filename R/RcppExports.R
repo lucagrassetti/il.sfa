@@ -2,26 +2,26 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 logh <- function(u, m, y, eta, lambda, sigma) {
-    .Call(`_il_sfa_logh`, u, m, y, eta, lambda, sigma)
+    .Call(`_ilsfa_logh`, u, m, y, eta, lambda, sigma)
 }
 
 getEffectsHN <- function(lnlambda, lnsigma, list_eta, list_y, niter, uinit) {
-    .Call(`_il_sfa_getEffectsHN`, lnlambda, lnsigma, list_eta, list_y, niter, uinit)
+    .Call(`_ilsfa_getEffectsHN`, lnlambda, lnsigma, list_eta, list_y, niter, uinit)
 }
 
 likHN <- function(lnlambda, lnsigma, list_eta, list_y, niter, uinit, ws, z) {
-    .Call(`_il_sfa_likHN`, lnlambda, lnsigma, list_eta, list_y, niter, uinit, ws, z)
+    .Call(`_ilsfa_likHN`, lnlambda, lnsigma, list_eta, list_y, niter, uinit, ws, z)
 }
 
 logf <- function(u, m, y, eta, sigmav, sigmau) {
-    .Call(`_il_sfa_logf`, u, m, y, eta, sigmav, sigmau)
+    .Call(`_ilsfa_logf`, u, m, y, eta, sigmav, sigmau)
 }
 
 likEHET <- function(gamma, lnsigmav, list_eta, list_y, list_z, niter, uinit, ws, z) {
-    .Call(`_il_sfa_likEHET`, gamma, lnsigmav, list_eta, list_y, list_z, niter, uinit, ws, z)
+    .Call(`_ilsfa_likEHET`, gamma, lnsigmav, list_eta, list_y, list_z, niter, uinit, ws, z)
 }
 
 getEffectsEHET <- function(gamma, lnsigmav, list_eta, list_y, list_z, niter, uinit) {
-    .Call(`_il_sfa_getEffectsEHET`, gamma, lnsigmav, list_eta, list_y, list_z, niter, uinit)
+    .Call(`_ilsfa_getEffectsEHET`, gamma, lnsigmav, list_eta, list_y, list_z, niter, uinit)
 }
 

@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // logh
 double logh(double u, int m, DoubleVector y, DoubleVector eta, double lambda, double sigma);
-RcppExport SEXP _il_sfa_logh(SEXP uSEXP, SEXP mSEXP, SEXP ySEXP, SEXP etaSEXP, SEXP lambdaSEXP, SEXP sigmaSEXP) {
+RcppExport SEXP _ilsfa_logh(SEXP uSEXP, SEXP mSEXP, SEXP ySEXP, SEXP etaSEXP, SEXP lambdaSEXP, SEXP sigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -28,7 +28,7 @@ END_RCPP
 }
 // getEffectsHN
 DoubleVector getEffectsHN(double lnlambda, double lnsigma, Rcpp::List list_eta, Rcpp::List list_y, int niter, DoubleVector uinit);
-RcppExport SEXP _il_sfa_getEffectsHN(SEXP lnlambdaSEXP, SEXP lnsigmaSEXP, SEXP list_etaSEXP, SEXP list_ySEXP, SEXP niterSEXP, SEXP uinitSEXP) {
+RcppExport SEXP _ilsfa_getEffectsHN(SEXP lnlambdaSEXP, SEXP lnsigmaSEXP, SEXP list_etaSEXP, SEXP list_ySEXP, SEXP niterSEXP, SEXP uinitSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -44,7 +44,7 @@ END_RCPP
 }
 // likHN
 double likHN(double lnlambda, double lnsigma, Rcpp::List list_eta, Rcpp::List list_y, int niter, DoubleVector uinit, DoubleVector ws, DoubleVector z);
-RcppExport SEXP _il_sfa_likHN(SEXP lnlambdaSEXP, SEXP lnsigmaSEXP, SEXP list_etaSEXP, SEXP list_ySEXP, SEXP niterSEXP, SEXP uinitSEXP, SEXP wsSEXP, SEXP zSEXP) {
+RcppExport SEXP _ilsfa_likHN(SEXP lnlambdaSEXP, SEXP lnsigmaSEXP, SEXP list_etaSEXP, SEXP list_ySEXP, SEXP niterSEXP, SEXP uinitSEXP, SEXP wsSEXP, SEXP zSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -62,7 +62,7 @@ END_RCPP
 }
 // logf
 double logf(double u, int m, DoubleVector y, DoubleVector eta, double sigmav, DoubleVector sigmau);
-RcppExport SEXP _il_sfa_logf(SEXP uSEXP, SEXP mSEXP, SEXP ySEXP, SEXP etaSEXP, SEXP sigmavSEXP, SEXP sigmauSEXP) {
+RcppExport SEXP _ilsfa_logf(SEXP uSEXP, SEXP mSEXP, SEXP ySEXP, SEXP etaSEXP, SEXP sigmavSEXP, SEXP sigmauSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -78,7 +78,7 @@ END_RCPP
 }
 // likEHET
 double likEHET(DoubleVector gamma, double lnsigmav, Rcpp::List list_eta, Rcpp::List list_y, Rcpp::List list_z, int niter, DoubleVector uinit, DoubleVector ws, DoubleVector z);
-RcppExport SEXP _il_sfa_likEHET(SEXP gammaSEXP, SEXP lnsigmavSEXP, SEXP list_etaSEXP, SEXP list_ySEXP, SEXP list_zSEXP, SEXP niterSEXP, SEXP uinitSEXP, SEXP wsSEXP, SEXP zSEXP) {
+RcppExport SEXP _ilsfa_likEHET(SEXP gammaSEXP, SEXP lnsigmavSEXP, SEXP list_etaSEXP, SEXP list_ySEXP, SEXP list_zSEXP, SEXP niterSEXP, SEXP uinitSEXP, SEXP wsSEXP, SEXP zSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -97,7 +97,7 @@ END_RCPP
 }
 // getEffectsEHET
 DoubleVector getEffectsEHET(DoubleVector gamma, double lnsigmav, Rcpp::List list_eta, Rcpp::List list_y, Rcpp::List list_z, int niter, DoubleVector uinit);
-RcppExport SEXP _il_sfa_getEffectsEHET(SEXP gammaSEXP, SEXP lnsigmavSEXP, SEXP list_etaSEXP, SEXP list_ySEXP, SEXP list_zSEXP, SEXP niterSEXP, SEXP uinitSEXP) {
+RcppExport SEXP _ilsfa_getEffectsEHET(SEXP gammaSEXP, SEXP lnsigmavSEXP, SEXP list_etaSEXP, SEXP list_ySEXP, SEXP list_zSEXP, SEXP niterSEXP, SEXP uinitSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -114,16 +114,16 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_il_sfa_logh", (DL_FUNC) &_il_sfa_logh, 6},
-    {"_il_sfa_getEffectsHN", (DL_FUNC) &_il_sfa_getEffectsHN, 6},
-    {"_il_sfa_likHN", (DL_FUNC) &_il_sfa_likHN, 8},
-    {"_il_sfa_logf", (DL_FUNC) &_il_sfa_logf, 6},
-    {"_il_sfa_likEHET", (DL_FUNC) &_il_sfa_likEHET, 9},
-    {"_il_sfa_getEffectsEHET", (DL_FUNC) &_il_sfa_getEffectsEHET, 7},
+    {"_ilsfa_logh", (DL_FUNC) &_ilsfa_logh, 6},
+    {"_ilsfa_getEffectsHN", (DL_FUNC) &_ilsfa_getEffectsHN, 6},
+    {"_ilsfa_likHN", (DL_FUNC) &_ilsfa_likHN, 8},
+    {"_ilsfa_logf", (DL_FUNC) &_ilsfa_logf, 6},
+    {"_ilsfa_likEHET", (DL_FUNC) &_ilsfa_likEHET, 9},
+    {"_ilsfa_getEffectsEHET", (DL_FUNC) &_ilsfa_getEffectsEHET, 7},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_il_sfa(DllInfo *dll) {
+RcppExport void R_init_ilsfa(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }
