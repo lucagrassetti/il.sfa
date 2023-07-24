@@ -99,7 +99,7 @@ the Hessian is initialized as a unit diagonal.
 ```{r }
 mle <- il_sfa(X = mydat$x, y = mydat$y, distr = "Exp", het = TRUE, z = mydat$z,
               group = mydat$g, useHess = TRUE)
-mle
+summary(mle)
 ```
 
 In some specific cases, the function fails, when considering the numerical hessian in 
