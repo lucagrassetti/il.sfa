@@ -52,7 +52,8 @@ Finally, $u_{it}$ is the one-sided inefficiency term, and $v_{it}$ is the
 symmetric idiosyncratic error, independent of $u_{it}$. A simple change in the $u_{it}$ sign is required 
 for a cost frontier model. 
 
-The theory for composite group families \citep[Chap. 7]{pace1997principles} implies that a location parameter  might be eliminated simply by integrating it, with no loss of information. In other words, a 
+The theory for composite group families \citep[Chap. 7]{pace1997principles} implies that a location parameter 
+might be eliminated simply by integrating it, with no loss of information. In other words, a 
 general marginal log-likelihood for $\theta = \left\{\beta, \sigma\right\}$ can be defined as
 \begin{equation}
 \label{inte}
