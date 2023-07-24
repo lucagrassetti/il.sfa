@@ -22,15 +22,18 @@ res_N100_Stata
 }
 \description{
 Contains the estimation results of the 1000 replications of the simulation experiment
-discussed in the reference paper Bellio and Grassetti (2023). Otained using the default
-arguments of DGP(.) The reported results refer to a heteroschedastic exponential SFM.
-They are obtained using sftfe function and the PDE method
+discussed in the reference paper Bellio and Grassetti (2023). Obtained using the default
+arguments of DGP(.) The reported results refer to a heteroscedastic exponential SFM.
+They are obtained using sftfe function (Belotti et al., 2013) and the PDE method.
 }
 \examples{
 data(res_N100_Stata)
 }
 \references{
 Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
-fixed-effects stochastic frontier models. WP
+fixed-effects stochastic frontier models. Submitted.
+
+Belotti, F., Daidone, S., Ilardi, G., Atella, V., 2013. Stochastic frontier
+analysis using Stata. The Stata Journal 13, 719-758
 }
 \keyword{datasets}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/IL_SFA_Sim.R
 \name{DGP}
 \alias{DGP}
-\title{The Data Generating Process used in the development of simulation studies.}
+\title{The Data Generating Process used in the simulation studies.}
 \usage{
 DGP(n, m, param, model = "HN", seed.val = 0, nsim = 1000, zvar = FALSE)
 }
@@ -15,20 +15,20 @@ DGP(n, m, param, model = "HN", seed.val = 0, nsim = 1000, zvar = FALSE)
 the idiosyncratic error variance - \eqn{\sigma_v},
 the vector of the parameters describing the efficiency behaviour - \eqn{\gamma}).}
 
-\item{model}{the kind of distribution considered to generate the efficiency related terms.}
+\item{model}{the kind of distribution considered to generate the efficiency-related terms.}
 
 \item{seed.val}{the seed value used to make the simulations reproducible.}
 
-\item{nsim}{an integer indicating the number of simulated dataset.}
+\item{nsim}{an integer indicating the number of simulated datasets.}
 
-\item{zvar}{a logical idenfying the case in which the efficiency is time variant.}
+\item{zvar}{a logical identifying the case in which the efficiency is time variant.}
 }
 \value{
 a list object including:
 
 -- the simulated y vectors (a matrix daty of dimension \eqn{nsim \times n\cdot m}),
 
--- the simulated of efficiency related terms (a matrix datu of dimension \eqn{nsim \times n\cdot m}),
+-- the simulated of efficiency-related terms (a matrix datu of dimension \eqn{nsim \times n\cdot m}),
 
 -- the simulated of independent variables (a matrix \eqn{x} of dimension \eqn{n\cdot m \times p}),
 
@@ -40,35 +40,36 @@ a list object including:
 The DGP is defined as
 \deqn{y_{it} = \alpha_i + x_{it}^T \beta - u_{it} + v_{it}}
 where \eqn{u_{it}} can be Half-Normal or Exponential and in this last
-case can also consider the mean of the Exponential distirbution as
-\deqn{\lambda_{it} = \gamma_0 + \gamma_1 z_{it}.}
+case can also consider the mean of the Exponential distribution as
+\deqn{\lambda_{it} = exp\left\(\gamma_0 + \gamma_1 z_{it}.\right\)}
 This last definition also brings to time-constant cases when
 \eqn{z_{it}} is considered constant over time.
 }
 \examples{
-# This code reproduce the results in Table 1 panel (a)
+# This code reproduces the results in Table 1 panel (a)
 # Belotti and Ilardi (2018) "Consistent inference in fixed-effects
 # stochastic frontier models" - N=100, T=5.
-# The example is limited to 100 replications to make the code
+# The example is limited to 10 replications to make the code
 # fairly executable. Changing the nsim parameter, one can consider the
-# original simulation with 1000 replications.
+# original simulation with 1000 replications. set.seed = 22 is used to generate the 
+# data analysed with Stata and R and compared in Bellio and Grassetti (2023). 
 
 N <- 100
 T <- 5
 para <- c(1,-1.5,1,0.25)
-nsimul <- 100
-dat <- DGP(N, T, list(beta=para[1], sigmav=para[4], gamma=para[2:3]), model = "Exp",
+nsimul <- 10
+dat <- DGP(N, T, list(beta = para[1], sigmav = para[4], gamma = para[2:3]), model = "Exp",
            seed.val = 22, nsim = nsimul)
-res100 <- matrix(0, nrow = nsimul, ncol=4)
-for(i in 1:nrow(res100)){
+res <- matrix(0, nrow = nsimul, ncol=4)
+for(i in 1:nrow(res)){
   print(i)
   mydat <- list(y = dat$daty[i,], x = data.frame(dat$x), g = dat$g, z = dat$datz)
   mle <- il_sfa(X = mydat$x, y = mydat$y, distr = "Exp", het = TRUE, z = mydat$z,
                 group = mydat$g, useHess = TRUE)
-  res100[i,] <- mle$par
+  res[i,] <- mle$par
   }
   # Compute the MSE of the estimates
-  for(i in 1:4) print(MSE(res100[,i], para[i]))
+  for(i in 1:4) print(MSE(res[,i], para[i]))
   # Compare them with the estimated values included in the
   # package data (res_N100_Stata.rda)
   data(res_N100_Stata)
@@ -80,5 +81,5 @@ Belotti, F., & Ilardi, G. (2018). Consistent inference in
 fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
 
 Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
-fixed-effects stochastic frontier models. WP
+fixed-effects stochastic frontier models. Submitted
 }
