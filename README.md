@@ -1,8 +1,8 @@
 # il.sfa
 
-Software companion for the estimation of TFE SFM with an Integrated Likelihood Approach. The source code is given with the typical structure of a package, and the built package can be easily downloaded as a
+Software companion for the estimation of TFE SFM with an Integrated Likelihood Approach. The source code is given with the typical structure of a package, and the built package can be easily downloaded by
 
-- Source file: il.sfa_0.1.0.tar.gz 
-- Binary file: il.sfa_0.1.0.tgz 
+```
+devtools::install_github("lucagrassetti/il.sfa", build_vignette = TRUE)
+```
 
-and installed locally.
