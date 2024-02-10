@@ -300,8 +300,7 @@ estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
                     initNM = TRUE, useHess = TRUE){
   p <- ncol(X)
   list_y <- split(y, group)
-  sA <- sqrt(sum(ols2$residuals^2) / (nrow(X) - max(group) - 1))
-  ols$sA <- sA
+  ols$sA <- sqrt(sum(ols$residuals^2) / (nrow(X) - max(group) - 1))
   list_eta <- split(X * ols$beta, group)
   obj.gh <- statmod::gauss.quad(nq, "hermite")
   ws <- obj.gh$weights * exp(obj.gh$nodes^2)
@@ -309,23 +308,23 @@ estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
   else init
   if(initNM){
     if(trace) cat("Searching for initial points...", "\n")
-    mleinit <-  optim(c(log(sA^2 - initdelta), 0), b = ols$beta, sA = ols$sA,
+    mleinit <-  optim(c(log(ols$sA^2 - initdelta), 0), b = ols$beta, sA = ols$sA,
                       likGamma.cons,  X = X, list_y = list_y,
-                      alphacenter = ols$alpha + (sA^2 - initdelta),
-                      group = mydat$g, ws = ws, nodes = obj.gh$nodes,
+                      alphacenter = ols$alpha + (ols$sA^2 - initdelta),
+                      group = group, ws = ws, nodes = obj.gh$nodes,
                       Kinit = Kinit, eps = eps, trace = int.trace,
                       control = list(trace = trace, reltol = eps * 10))
     initA <- c(ols$beta, log(ols$sA), mleinit$par)
-    cat("done", "\n")
+#    cat("done", "\n")
   }
   H <- diag(p + 3)
   if(useHess) {
     if(trace) cat("Computing Hessian at starting values...", "\t")
     H <- pracma::hessian(likGamma, initA, X = X, list_y = list_y,
                          alphacenter = ols$alpha + exp(initA[3]),
-                         group = mydat$g, ws = ws, nodes = obj.gh$nodes,
+                         group = group, ws = ws, nodes = obj.gh$nodes,
                          Kinit = Kinit, eps = eps, trace = int.trace)
-    cat("done", "\n")
+#    cat("done", "\n")
   }
   E <- eigen(H)
   if(min(E$values)<=0) H <- diag(p+3)
@@ -334,16 +333,16 @@ estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
   mle <- ucminf::ucminf(initA,
                         likGamma,  X = X, list_y = list_y,
                         alphacenter = ols$alpha + exp(mleinit$par[1]),
-                        group = mydat$g, ws = ws, nodes = obj.gh$nodes,
+                        group = group, ws = ws, nodes = obj.gh$nodes,
                         Kinit = Kinit, eps = eps, trace = int.trace,
                         control = list(trace = trace, grtol = eps * 10^3, invhessian.lt = L1))
-  cat("done", "\n")
+#  cat("done", "\n")
   out <- mle
   alpha <- exp(mle$par[2 + p] - mle$par[3 + p])
   sigma <- sqrt(exp(mle$par[p + 1] * 2) - alpha * exp(mle$par[p + 3] * 2))
   out$paraorig <- c(mle$par[1], sigma, alpha, exp(mle$par[p + 3]))
-  attr(out$paraorig, "names") <- c("beta", "sigma", "gamma", "lambda")
-  attr(out$par, "names") <- c("beta", "lnsigmaA", "lnmuA", "lnlambda")
+  attr(out$paraorig, "names") <- c(colnames(X), "sigma", "gamma", "lambda")
+  attr(out$par, "names") <- c(colnames(X), "lnsigmaA", "lnmuA", "lnlambda")
   return(out)
 }
 

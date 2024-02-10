@@ -25,3 +25,35 @@ getEffectsEHET <- function(gamma, lnsigmav, list_eta, list_y, list_z, niter, uin
     .Call(`_ilsfa_getEffectsEHET`, gamma, lnsigmav, list_eta, list_y, list_z, niter, uinit)
 }
 
+dnormgam <- function(y, mu, sigma, alpha, lambda) {
+    .Call(`_ilsfa_dnormgam`, y, mu, sigma, alpha, lambda)
+}
+
+Ii12 <- function(y, mu, sigma, alpha, lambda) {
+    .Call(`_ilsfa_Ii12`, y, mu, sigma, alpha, lambda)
+}
+
+logh_G <- function(u, m, y, eta, sigma, alpha, lambda) {
+    .Call(`_ilsfa_logh_G`, u, m, y, eta, sigma, alpha, lambda)
+}
+
+logHess <- function(u, m, y, eta, sigma, alpha, lambda) {
+    .Call(`_ilsfa_logHess`, u, m, y, eta, sigma, alpha, lambda)
+}
+
+getEffectsG <- function(lnsigma, lnalpha, lnlambda, list_eta, list_y, niter, uinit) {
+    .Call(`_ilsfa_getEffectsG`, lnsigma, lnalpha, lnlambda, list_eta, list_y, niter, uinit)
+}
+
+minlogh <- function(u, m, y, eta, sigma, alpha, lambda) {
+    .Call(`_ilsfa_minlogh`, u, m, y, eta, sigma, alpha, lambda)
+}
+
+getEffectsGS <- function(lnsigma, lnalpha, lnlambda, list_eta, list_y, ulow, uup, eps) {
+    .Call(`_ilsfa_getEffectsGS`, lnsigma, lnalpha, lnlambda, list_eta, list_y, ulow, uup, eps)
+}
+
+likG <- function(lnsigma, lnalpha, lnlambda, list_eta, list_y, ulow, uup, eps, ws, z, niter, uinit, method) {
+    .Call(`_ilsfa_likG`, lnsigma, lnalpha, lnlambda, list_eta, list_y, ulow, uup, eps, ws, z, niter, uinit, method)
+}
+

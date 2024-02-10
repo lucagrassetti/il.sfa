@@ -63,7 +63,7 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,
                    nq = 25, niter = 10,
                    init = NULL, Jinit = 5, #Kinit = 5, ### Jinit e Kinit
                    initdelta = 0.5, useHess = TRUE,
-                   trace = 0, init.trace = FALSE,
+                   trace = 0, int.trace = FALSE,
                    initNM = TRUE,
                    grtol = 10^-6,
                    eps = 10^-4,
@@ -73,10 +73,9 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,
   # ols1 <- lme4::lmer(formula, data.frame(y = y, X, group = group, z = z))
   #
   # ols <- list(alpha = tapply(y, group, mean), beta = lme4::fixef(ols1)[1+(1:ncol(X))])
-  print("This is the new code")
   X_plus <- model.matrix(~factor(group)-1+X)
   ols2 <- RcppEigen::fastLmPure(X_plus, y)
-  ols <- list(alpha = ols2$coef[1:max(group)], beta = ols2$coef[max(group)+1])
+  ols <- list(alpha = ols2$coef[1:max(group)], beta = ols2$coef[max(group)+1], residuals = ols2$residuals)
   if(distr == "Exp")
   {
     if(het == TRUE)
