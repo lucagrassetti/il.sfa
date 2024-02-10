@@ -17,6 +17,8 @@ Imports:
     lme4,
     numDeriv,
     Rcpp (>= 1.0.11),
+    RcppNumerical,
+    RcppEigen,
     statmod,
     ucminf
 LinkingTo: Rcpp
