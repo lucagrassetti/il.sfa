@@ -237,4 +237,112 @@ estim_EXP <- function(X, y, group, ols, nq = 25, niter = 10,
   return(out)
 }
 
+#############################################################
+#    Gamma case
+#############################################################
+###Gong-Samaniego: para[1] is log(sigmaA), para[2] is log(muA), para[3] is log(lambda)
+# psGong <- function(para, list_eta, list_y, alphastar){
+#   out <- likGong(para[1], para[2], para[3], list_eta, list_y, alphastar)
+#   alpha <- exp(para[2] - para[3])
+#   sigma <- sqrt(exp(para[1] * 2) - alpha * exp(para[3] * 2))
+#   cat(sigma, alpha, exp(para[3]), "-log=", out, "\n")
+#  return(out)
+# }
+
+#minus log-likelihood for fixed alpha 
+# likGamma_alpha <- function(para, alpha, X, group, list_y, ymeans, 
+#                            ws, nodes,  Kinit = 5 , eps = 0.0001, 
+#                            niter = 10, umeth = "GS",
+#                            trace = FALSE){
+#   p <- ncol(X)
+#   eta <- as.vector(X %*% para[1:p])
+#   list_eta <- split(eta, group)
+#   m0 <- if(umeth == "GS") 0 else 1
+#   ll <- likG(para[p + 1], log(alpha), para[p + 2], list_eta, list_y, 
+#               ymeans - Kinit, ymeans + Kinit, eps, ws, nodes, niter, ymeans, m0)
+#   if(trace) cat(c(para[1:p], exp(para[p+1]), alpha, exp(para)[p+2]), "-log=", ll, "\n")
+#   return(-ll)
+# }
+# 
+
+## minus log-likelihood: para = beta, sigmaA, muA, lambda
+likGamma <- function(para, X, group, list_y, alphacenter, ws, nodes,  
+                     Kinit = 5 , eps = 0.0001, trace = FALSE, 
+                     niter = 10, umeth = "GS"){
+  p <- ncol(X)
+  eta <- as.vector(X %*% para[1:p])
+  list_eta <- split(eta, group)
+  m0 <- if(umeth == "GS") 0 else 1
+  alpha <- exp(para[2 + p] - para[3 + p])
+  sigma2 <- exp(para[p + 1] * 2) - alpha * exp(para[p + 3] * 2)
+  sigma <- if(sigma2 > 0) sqrt(sigma2) else eps * 100
+  ll <- if(sigma == eps * 100) -10^6
+  else likG(log(sigma), log(alpha), para[p + 3], list_eta, list_y, alphacenter - Kinit, 
+            alphacenter + Kinit, eps, ws, nodes, niter, alphacenter, m0)
+  if(trace) cat(c(para[1:p], sigma, alpha, exp(para[p+3])), "-log=", ll, "\n")
+  return(-ll)
+}
+
+## only muA and lambda
+likGamma.cons <- function(para, b, sA, X, group, list_y, alphacenter, ws, nodes,  
+                          Kinit = 5 , eps = 0.0001, trace = FALSE, 
+                          niter = 10, umeth = "GS"){
+  parcomp <- c(b, log(sA), para)
+  out <- likGamma(parcomp, X, group, list_y, alphacenter, ws, nodes,  Kinit, eps, 
+                  trace, niter, umeth)
+  return(out)
+}
+
+
+estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5, 
+                    niter = 10, umeth = "GS", initdelta = 0.5, 
+                    init = NULL,  trace = TRUE, int.trace = FALSE, 
+                    initNM = TRUE, useHess = TRUE){
+  p <- ncol(X)
+  list_y <- split(y, group)
+  obj.gh <- statmod::gauss.quad(nq, "hermite")
+  ws <- obj.gh$weights * exp(obj.gh$nodes^2)
+  initA <- if(is.null(init)) c(ols$beta, log(ols$sA), log(sA^2 - initdelta), 0)
+  else init 
+  if(initNM){
+    if(trace) cat("Searching for initial points...", "\n")
+    mleinit <-  optim(c(log(sA^2 - initdelta), 0), b = ols$beta, sA = ols$sA, 
+                      likGamma.cons,  X = X, list_y = list_y,  
+                      alphacenter = ols$alpha + (sA^2 - initdelta), 
+                      group = mydat$g, ws = ws, nodes = obj.gh$nodes,
+                      Kinit = Kinit, eps = eps, trace = int.trace,
+                      control = list(trace = trace, reltol = eps * 10))
+    initA <- c(ols$beta, log(ols$sA), mleinit$par)
+    cat("done", "\n")
+  }  
+  H <- diag(p + 3)
+  if(useHess) {
+    if(trace) cat("Computing Hessian at starting values...", "\t")
+    H <- pracma::hessian(likGamma, initA, X = X, list_y = list_y,  
+                         alphacenter = ols$alpha + exp(initA[3]), 
+                         group = mydat$g, ws = ws, nodes = obj.gh$nodes,
+                         Kinit = Kinit, eps = eps, trace = int.trace)
+    cat("done", "\n")
+  }
+  E <- eigen(H)
+  if(min(E$values)<=0) H <- diag(p+3)
+  L1 <- solve(H)[lower.tri(H, diag = TRUE)]
+  if(trace) cat("Starting final optimization...", "\n")
+  mle <- ucminf::ucminf(initA, 
+                        likGamma,  X = X, list_y = list_y,  
+                        alphacenter = ols$alpha + exp(mleinit$par[1]), 
+                        group = mydat$g, ws = ws, nodes = obj.gh$nodes,
+                        Kinit = Kinit, eps = eps, trace = int.trace,  
+                        control = list(trace = trace, grtol = eps * 10^3, invhessian.lt = L1))    
+  cat("done", "\n")
+  out <- mle
+  alpha <- exp(mle$par[2 + p] - mle$par[3 + p])
+  sigma <- sqrt(exp(mle$par[p + 1] * 2) - alpha * exp(mle$par[p + 3] * 2))
+  out$paraorig <- c(mle$par[1], sigma, alpha, exp(mle$par[p + 3]))
+  attr(out$paraorig, "names") <- c("beta", "sigma", "gamma", "lambda")
+  attr(out$par, "names") <- c("beta", "lnsigmaA", "lnmuA", "lnlambda") 
+  return(out)
+}  
+
+
 

@@ -2,7 +2,7 @@
 #'
 #' This function adopts the IL approach to the estimation of some kind of SF models
 #' (see Bellio and Grassetti, 2023) such
-#' as those based on N-HN and N-Exponential error terms convolutions.
+#' as those based on N-HN, N-Exponential, and N-Gamma error terms convolutions.
 #' The function adopts a consistent and computationally efficient approach to the
 #' model estimation.
 #' The model specification is as
@@ -59,10 +59,15 @@
 #' mle
 #'
 #' @export
-il_sfa <- function(X, y, distr = "Exp", het = TRUE, z, group, nq = 25, niter = 10,
-                   init = NULL, useHess = TRUE,
-                   trace = 0, grtol = 10^-6,
-                   grad = "central")
+il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group, 
+                   nq = 25, niter = 10,
+                   init = NULL, Jinit = 5, #Kinit = 5, ### Jinit e Kinit
+                   initdelta = 0.5, useHess = TRUE,
+                   trace = 0, init.trace = FALSE, 
+                   initNM = TRUE,
+                   grtol = 10^-6,
+                   eps = 10^-4, 
+                   grad = "central", umeth = "GS")
 {
   # formula <- paste(c("y", paste(c(names(X), "(1|group)"), collapse = " + ")), collapse = " ~ ")
   # ols1 <- lme4::lmer(formula, data.frame(y = y, X, group = group, z = z))
@@ -152,7 +157,52 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z, group, nq = 25, niter = 1
       }
     }
   }
-  if(sum(distr %in% c("HN", "Exp"))==0)
+  if(distr == "Gamma")
+  {
+    if(het == TRUE)
+    {
+      print("Heteroschedastic errors are still not supported for Gamma distribution.")
+      print("The estimation results are obtained under homoscedasticity assumption.")
+      het <- FALSE
+      mle <- estim_G(X = X, y = y, group = group, 
+                     ols = ols, nq = nq, eps = eps, Kinit = Jinit,
+                     niter = niter, umeth = umeth, initdelta = initdelta,
+                     int.trace = int.trace, init = init,  trace = trace, 
+                     initNM = initNM,
+                     useHess = useHess)
+      p <- ncol(X)
+      if(mle$par[1:p] == ols$beta)
+      {
+        print("Hessian computation failed: using useHess = FALSE")
+        mle <- estim_G(X = X, y = y, group = group, 
+                       ols = ols, nq = nq, eps = eps, Kinit = Jinit,
+                       niter = niter, umeth = umeth, initdelta = initdelta,
+                       int.trace = int.trace, init = init,  trace = trace, 
+                       initNM = initNM,
+                       useHess = FALSE)
+      }
+    } else
+    {
+      mle <- estim_G(X = X, y = y, group = group, 
+                     ols = ols, nq = nq, eps = eps, Kinit = Jinit,
+                     niter = niter, umeth = umeth, initdelta = initdelta,
+                     int.trace = int.trace, init = init,  trace = trace, 
+                     initNM = initNM,
+                     useHess = useHess)
+      p <- ncol(X)
+      if(mle$par[1:p] == ols$beta)
+      {
+        print("Hessian computation failed: using useHess = FALSE")
+        mle <- estim_G(X = X, y = y, group = group, 
+                       ols = ols, nq = nq, eps = eps, Kinit = Jinit,
+                       niter = niter, umeth = umeth, initdelta = initdelta,
+                       int.trace = int.trace, init = init,  trace = trace, 
+                       initNM = initNM,
+                       useHess = FALSE)
+      }
+    }
+  }
+  if(sum(distr %in% c("HN", "Exp", "Gamma"))==0)
   {
     print("Error: distr must be HN - Half-Normal or Exponential - Exp.")
     mle <- NULL
