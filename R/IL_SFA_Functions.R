@@ -43,14 +43,14 @@ estim_HN <- function(X, y, group, ols, nq = 25, niter = 10,
                         ws = ws, nodes = obj.gh$nodes,
                         control = list(grad = grad, trace = trace, invhessian.lt = L1, grtol = grtol))
   out  <- list(par = getsig(ogg$par))
-  names(out$par) <- c(names(X), "sigmau", "sigmav")
+  names(out$par) <- c(colnames(X), "sigmau", "sigmav")
   hes <- numDeriv::hessian(likHNall_orig, out$par,  X = X, list_y = list_y,  group = group,
                            alphainit = ols$alpha, niter = niter,
                            ws = ws, nodes = obj.gh$nodes)
-  colnames(hes) <- rownames(hes) <- c(names(X), "sigmau", "sigmav")
+  colnames(hes) <- rownames(hes) <- c(colnames(X), "sigmau", "sigmav")
   out$invhes <- solve(hes)
   out$se <- sqrt(diag(out$invhes))
-  names(out$se) <- c(names(X), "sigmau", "sigmav")
+  names(out$se) <- c(colnames(X), "sigmau", "sigmav")
   out$alphai <- alphaiHN(para = ogg$par, X = X, group = group, list_y = list_y,
                            niter=niter, uinit = rep(0, length(y)))
   out$uit <- extractUit_HN(para = out$par, X = X, y = y, group = group, alphai = out$alphai)
@@ -166,16 +166,16 @@ estim_EHET <- function(X, y, z, group, ols, nq = 25, niter = 10,
                         ws = ws, nodes = obj.gh$nodes,
                         control = list(grad = grad, trace = trace, invhessian.lt = L1, grtol = grtol))
   out  <- list(par = ogg$par)
-  names(out$par) <- c(names(X), "gamma1", "gamma2", "sigma_v")
+  names(out$par) <- c(colnames(X), "gamma1", "gamma2", "sigma_v")
   out$par[p + 3] <- exp(out$par[p + 3])
   hes <- numDeriv::hessian(likEHETall_orig, out$par,  X = X, list_y = list_y, list_z = list_z, group = group,
                            alphainit = ols$alpha, niter = niter,
                            ws = ws, nodes = obj.gh$nodes)
-  colnames(hes) <- rownames(hes) <- c(names(X), "gamma1", "gamma2", "sigma_v")
+  colnames(hes) <- rownames(hes) <- c(colnames(X), "gamma1", "gamma2", "sigma_v")
   out$invhes <- solve(hes)
   out$se <- sqrt(diag(out$invhes))
 #  out$se[p + 3] <- sqrt(exp(out$par[p + 3]*2) * out$se[p + 3]^2)
-  names(out$se) <- c(names(X), "gamma1", "gamma2", "sigma_v")
+  names(out$se) <- c(colnames(X), "gamma1", "gamma2", "sigma_v")
   out$alphai <- alphaiEHET(para = ogg$par, X = X, group = group, list_y = list_y,
                     list_z = list_z, niter=niter, uinit = rep(0, length(y)))
   out$uit <- extractUit_EHET(para = out$par, X = X, y = y, z = z, group = group, alphai = out$alphai)
@@ -220,16 +220,16 @@ estim_EXP <- function(X, y, group, ols, nq = 25, niter = 10,
                         ws = ws, nodes = obj.gh$nodes,
                         control = list(grad = grad, trace = trace, invhessian.lt = L1, grtol = grtol))
   out  <- list(par = ogg$par)
-  names(out$par) <- c(names(X), "gamma", "sigmav")
+  names(out$par) <- c(colnames(X), "gamma", "sigmav")
   out$par[p + 2] <- exp(out$par[p + 2])
   hes <- numDeriv::hessian(likEXPall_orig, out$par,  X = X, list_y = list_y,  group = group,
                            alphainit = ols$alpha, niter = niter,
                            ws = ws, nodes = obj.gh$nodes)
-  colnames(hes) <- rownames(hes) <- c(names(X), "gamma", "sigmav")
+  colnames(hes) <- rownames(hes) <- c(colnames(X), "gamma", "sigmav")
   out$invhes = solve(hes)
   out$se <- sqrt(diag(out$invhes))
 #  out$se[p + 2] <- sqrt(exp(out$par[p + 2]*2) * out$se[p + 2]^2)
-  names(out$se) <- c(names(X), "gamma", "sigma_v")
+  names(out$se) <- c(colnames(X), "gamma", "sigma_v")
   out$alphai <- alphaiEHET(para = c(ogg$par[1:p],ogg$par[p+1], 0,ogg$par[p+2]), X = X, group = group, list_y = list_y,
                            list_z = list_z, niter=niter, uinit = rep(0, length(y)))
   out$uit <- extractUit_EHET(para = c(out$par[1:p],out$par[p+1],0,out$par[p+2]), X = X, y = y, z =z, group = group, alphai = out$alphai)
@@ -249,25 +249,25 @@ estim_EXP <- function(X, y, group, ols, nq = 25, niter = 10,
 #  return(out)
 # }
 
-#minus log-likelihood for fixed alpha 
-# likGamma_alpha <- function(para, alpha, X, group, list_y, ymeans, 
-#                            ws, nodes,  Kinit = 5 , eps = 0.0001, 
+#minus log-likelihood for fixed alpha
+# likGamma_alpha <- function(para, alpha, X, group, list_y, ymeans,
+#                            ws, nodes,  Kinit = 5 , eps = 0.0001,
 #                            niter = 10, umeth = "GS",
 #                            trace = FALSE){
 #   p <- ncol(X)
 #   eta <- as.vector(X %*% para[1:p])
 #   list_eta <- split(eta, group)
 #   m0 <- if(umeth == "GS") 0 else 1
-#   ll <- likG(para[p + 1], log(alpha), para[p + 2], list_eta, list_y, 
+#   ll <- likG(para[p + 1], log(alpha), para[p + 2], list_eta, list_y,
 #               ymeans - Kinit, ymeans + Kinit, eps, ws, nodes, niter, ymeans, m0)
 #   if(trace) cat(c(para[1:p], exp(para[p+1]), alpha, exp(para)[p+2]), "-log=", ll, "\n")
 #   return(-ll)
 # }
-# 
+#
 
 ## minus log-likelihood: para = beta, sigmaA, muA, lambda
-likGamma <- function(para, X, group, list_y, alphacenter, ws, nodes,  
-                     Kinit = 5 , eps = 0.0001, trace = FALSE, 
+likGamma <- function(para, X, group, list_y, alphacenter, ws, nodes,
+                     Kinit = 5 , eps = 0.0001, trace = FALSE,
                      niter = 10, umeth = "GS"){
   p <- ncol(X)
   eta <- as.vector(X %*% para[1:p])
@@ -277,49 +277,52 @@ likGamma <- function(para, X, group, list_y, alphacenter, ws, nodes,
   sigma2 <- exp(para[p + 1] * 2) - alpha * exp(para[p + 3] * 2)
   sigma <- if(sigma2 > 0) sqrt(sigma2) else eps * 100
   ll <- if(sigma == eps * 100) -10^6
-  else likG(log(sigma), log(alpha), para[p + 3], list_eta, list_y, alphacenter - Kinit, 
+  else likG(log(sigma), log(alpha), para[p + 3], list_eta, list_y, alphacenter - Kinit,
             alphacenter + Kinit, eps, ws, nodes, niter, alphacenter, m0)
   if(trace) cat(c(para[1:p], sigma, alpha, exp(para[p+3])), "-log=", ll, "\n")
   return(-ll)
 }
 
 ## only muA and lambda
-likGamma.cons <- function(para, b, sA, X, group, list_y, alphacenter, ws, nodes,  
-                          Kinit = 5 , eps = 0.0001, trace = FALSE, 
+likGamma.cons <- function(para, b, sA, X, group, list_y, alphacenter, ws, nodes,
+                          Kinit = 5 , eps = 0.0001, trace = FALSE,
                           niter = 10, umeth = "GS"){
   parcomp <- c(b, log(sA), para)
-  out <- likGamma(parcomp, X, group, list_y, alphacenter, ws, nodes,  Kinit, eps, 
+  out <- likGamma(parcomp, X, group, list_y, alphacenter, ws, nodes,  Kinit, eps,
                   trace, niter, umeth)
   return(out)
 }
 
 
-estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5, 
-                    niter = 10, umeth = "GS", initdelta = 0.5, 
-                    init = NULL,  trace = TRUE, int.trace = FALSE, 
+estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
+                    niter = 10, umeth = "GS", initdelta = 0.5,
+                    init = NULL,  trace = TRUE, int.trace = FALSE,
                     initNM = TRUE, useHess = TRUE){
   p <- ncol(X)
   list_y <- split(y, group)
+  sA <- sqrt(sum(ols2$residuals^2) / (nrow(X) - max(group) - 1))
+  ols$sA <- sA
+  list_eta <- split(X * ols$beta, group)
   obj.gh <- statmod::gauss.quad(nq, "hermite")
   ws <- obj.gh$weights * exp(obj.gh$nodes^2)
-  initA <- if(is.null(init)) c(ols$beta, log(ols$sA), log(sA^2 - initdelta), 0)
-  else init 
+  initA <- if(is.null(init)) c(ols$beta, log(ols$sA), log(ols$sA^2 - initdelta), 0)
+  else init
   if(initNM){
     if(trace) cat("Searching for initial points...", "\n")
-    mleinit <-  optim(c(log(sA^2 - initdelta), 0), b = ols$beta, sA = ols$sA, 
-                      likGamma.cons,  X = X, list_y = list_y,  
-                      alphacenter = ols$alpha + (sA^2 - initdelta), 
+    mleinit <-  optim(c(log(sA^2 - initdelta), 0), b = ols$beta, sA = ols$sA,
+                      likGamma.cons,  X = X, list_y = list_y,
+                      alphacenter = ols$alpha + (sA^2 - initdelta),
                       group = mydat$g, ws = ws, nodes = obj.gh$nodes,
                       Kinit = Kinit, eps = eps, trace = int.trace,
                       control = list(trace = trace, reltol = eps * 10))
     initA <- c(ols$beta, log(ols$sA), mleinit$par)
     cat("done", "\n")
-  }  
+  }
   H <- diag(p + 3)
   if(useHess) {
     if(trace) cat("Computing Hessian at starting values...", "\t")
-    H <- pracma::hessian(likGamma, initA, X = X, list_y = list_y,  
-                         alphacenter = ols$alpha + exp(initA[3]), 
+    H <- pracma::hessian(likGamma, initA, X = X, list_y = list_y,
+                         alphacenter = ols$alpha + exp(initA[3]),
                          group = mydat$g, ws = ws, nodes = obj.gh$nodes,
                          Kinit = Kinit, eps = eps, trace = int.trace)
     cat("done", "\n")
@@ -328,21 +331,21 @@ estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
   if(min(E$values)<=0) H <- diag(p+3)
   L1 <- solve(H)[lower.tri(H, diag = TRUE)]
   if(trace) cat("Starting final optimization...", "\n")
-  mle <- ucminf::ucminf(initA, 
-                        likGamma,  X = X, list_y = list_y,  
-                        alphacenter = ols$alpha + exp(mleinit$par[1]), 
+  mle <- ucminf::ucminf(initA,
+                        likGamma,  X = X, list_y = list_y,
+                        alphacenter = ols$alpha + exp(mleinit$par[1]),
                         group = mydat$g, ws = ws, nodes = obj.gh$nodes,
-                        Kinit = Kinit, eps = eps, trace = int.trace,  
-                        control = list(trace = trace, grtol = eps * 10^3, invhessian.lt = L1))    
+                        Kinit = Kinit, eps = eps, trace = int.trace,
+                        control = list(trace = trace, grtol = eps * 10^3, invhessian.lt = L1))
   cat("done", "\n")
   out <- mle
   alpha <- exp(mle$par[2 + p] - mle$par[3 + p])
   sigma <- sqrt(exp(mle$par[p + 1] * 2) - alpha * exp(mle$par[p + 3] * 2))
   out$paraorig <- c(mle$par[1], sigma, alpha, exp(mle$par[p + 3]))
   attr(out$paraorig, "names") <- c("beta", "sigma", "gamma", "lambda")
-  attr(out$par, "names") <- c("beta", "lnsigmaA", "lnmuA", "lnlambda") 
+  attr(out$par, "names") <- c("beta", "lnsigmaA", "lnmuA", "lnlambda")
   return(out)
-}  
+}
 
 
 

@@ -24,7 +24,7 @@
 #' @return -- the simulated of independent variables (a matrix \eqn{x} of dimension \eqn{n\cdot m \times p}),
 #' @return -- the simulated of grouping identifiers (a vector \eqn{g} of length \eqn{n\cdot m}), and
 #' @return -- the simulated values of the variable influencing the efficiency level (a vector \eqn{datz} of length \eqn{n\cdot m}).
-#' 
+#'
 #' @description This code allows to reproduce the results in Table 1 panel (a)
 #' Belotti and Ilardi (2018) "Consistent inference in fixed-effects
 #' stochastic frontier models" - The sample size is fixed to N=100 and T=5.
@@ -33,10 +33,10 @@
 #' original simulation with 1000 replications. set.seed = 22 is used to generate the
 #' data analysed with Stata and R and compared in Bellio and Grassetti (2023).
 #' In the cited papers, the simulations use a number of replication equal to 1000.
-#' The available distributions for the efficiency term are: homoschedastic half normal "HN", 
-#' homoschedastic and heteroschedastic Exponential ("Exp"), 
+#' The available distributions for the efficiency term are: homoschedastic half normal "HN",
+#' homoschedastic and heteroschedastic Exponential ("Exp"),
 #' and homoschedastic Gamma ("Gamma").
-#' 
+#'
 #' @references Belotti, F., & Ilardi, G. (2018). Consistent inference in
 #' fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
 #' @references Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
@@ -94,6 +94,8 @@ DGP <- function(n, m, param, model = "HN", seed.val = 0, nsim = 1000, zvar = FAL
     daty[i,] <-  alpha[g] + x * beta + rnorm(n * m, sd = sqrt(s2v)) - u
     datu[i,] <- u
   }
-  return(list(daty = daty, datu = datu, x = as.matrix(x, ncol = 1), g = g, datz = z))
+  x <- as.matrix(x, ncol = 1)
+  colnames(x) <- paste0("x", 1:ncol(x))
+  return(list(daty = daty, datu = datu, x = x, g = g, datz = z))
 }
 

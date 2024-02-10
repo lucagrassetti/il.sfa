@@ -59,14 +59,14 @@
 #' mle
 #'
 #' @export
-il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group, 
+il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,
                    nq = 25, niter = 10,
                    init = NULL, Jinit = 5, #Kinit = 5, ### Jinit e Kinit
                    initdelta = 0.5, useHess = TRUE,
-                   trace = 0, init.trace = FALSE, 
+                   trace = 0, init.trace = FALSE,
                    initNM = TRUE,
                    grtol = 10^-6,
-                   eps = 10^-4, 
+                   eps = 10^-4,
                    grad = "central", umeth = "GS")
 {
   # formula <- paste(c("y", paste(c(names(X), "(1|group)"), collapse = " + ")), collapse = " ~ ")
@@ -74,8 +74,7 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,
   #
   # ols <- list(alpha = tapply(y, group, mean), beta = lme4::fixef(ols1)[1+(1:ncol(X))])
   print("This is the new code")
-  dat <- data.frame(y = y, x = X, group = group, z = z)
-  X_plus <- model.matrix(~factor(group)-1+x, dat)
+  X_plus <- model.matrix(~factor(group)-1+X)
   ols2 <- RcppEigen::fastLmPure(X_plus, y)
   ols <- list(alpha = ols2$coef[1:max(group)], beta = ols2$coef[max(group)+1])
   if(distr == "Exp")
@@ -164,39 +163,39 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,
       print("Heteroschedastic errors are still not supported for Gamma distribution.")
       print("The estimation results are obtained under homoscedasticity assumption.")
       het <- FALSE
-      mle <- estim_G(X = X, y = y, group = group, 
+      mle <- estim_G(X = X, y = y, group = group,
                      ols = ols, nq = nq, eps = eps, Kinit = Jinit,
                      niter = niter, umeth = umeth, initdelta = initdelta,
-                     int.trace = int.trace, init = init,  trace = trace, 
+                     int.trace = int.trace, init = init,  trace = trace,
                      initNM = initNM,
                      useHess = useHess)
       p <- ncol(X)
       if(mle$par[1:p] == ols$beta)
       {
         print("Hessian computation failed: using useHess = FALSE")
-        mle <- estim_G(X = X, y = y, group = group, 
+        mle <- estim_G(X = X, y = y, group = group,
                        ols = ols, nq = nq, eps = eps, Kinit = Jinit,
                        niter = niter, umeth = umeth, initdelta = initdelta,
-                       int.trace = int.trace, init = init,  trace = trace, 
+                       int.trace = int.trace, init = init,  trace = trace,
                        initNM = initNM,
                        useHess = FALSE)
       }
     } else
     {
-      mle <- estim_G(X = X, y = y, group = group, 
+      mle <- estim_G(X = X, y = y, group = group,
                      ols = ols, nq = nq, eps = eps, Kinit = Jinit,
                      niter = niter, umeth = umeth, initdelta = initdelta,
-                     int.trace = int.trace, init = init,  trace = trace, 
+                     int.trace = int.trace, init = init,  trace = trace,
                      initNM = initNM,
                      useHess = useHess)
       p <- ncol(X)
       if(mle$par[1:p] == ols$beta)
       {
         print("Hessian computation failed: using useHess = FALSE")
-        mle <- estim_G(X = X, y = y, group = group, 
+        mle <- estim_G(X = X, y = y, group = group,
                        ols = ols, nq = nq, eps = eps, Kinit = Jinit,
                        niter = niter, umeth = umeth, initdelta = initdelta,
-                       int.trace = int.trace, init = init,  trace = trace, 
+                       int.trace = int.trace, init = init,  trace = trace,
                        initNM = initNM,
                        useHess = FALSE)
       }
