@@ -9,15 +9,21 @@ il_sfa(
   y,
   distr = "Exp",
   het = TRUE,
-  z,
+  z = NULL,
   group,
   nq = 25,
   niter = 10,
   init = NULL,
+  Jinit = 5,
+  initdelta = 0.5,
   useHess = TRUE,
   trace = 0,
+  int.trace = FALSE,
+  initNM = TRUE,
   grtol = 10^-6,
-  grad = "central"
+  eps = 10^-4,
+  grad = "central",
+  umeth = "GS"
 )
 }
 \arguments{
@@ -41,7 +47,7 @@ terms (default is TRUE, but it works for the Exponential case only).}
 \item{init}{the optional vector of initial values for the maximization of integrated likelihood (default is NULL).}
 
 \item{useHess}{a logical: if TRUE, the likelihood maximization is initialized with the numerical
-Hessian otherwise, the Hessian is initialized as a unit diagonal.}
+Hessian; otherwise, the Hessian is initialized as a unit diagonal.}
 
 \item{trace}{trace parameter used in ucminf function (if trace is positive, then
 detailed tracing information is printed for each iteration).}
@@ -68,7 +74,7 @@ A list including
 \description{
 This function adopts the IL approach to the estimation of some kind of SF models
 (see Bellio and Grassetti, 2023) such
-as those based on N-HN and N-Exponential error terms convolutions.
+as those based on N-HN, N-Exponential, and N-Gamma error terms convolutions.
 The function adopts a consistent and computationally efficient approach to the
 model estimation.
 The model specification is as
