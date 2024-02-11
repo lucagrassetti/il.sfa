@@ -341,8 +341,8 @@ estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
   alpha <- exp(mle$par[2 + p] - mle$par[3 + p])
   sigma <- sqrt(exp(mle$par[p + 1] * 2) - alpha * exp(mle$par[p + 3] * 2))
   out$paraorig <- c(mle$par[1], sigma, alpha, exp(mle$par[p + 3]))
-  attr(out$paraorig, "names") <- c(colnames(X), "sigma", "gamma", "lambda")
-  attr(out$par, "names") <- c(colnames(X), "lnsigmaA", "lnmuA", "lnlambda")
+  names(out$paraorig) <- c(colnames(X), "sigma", "gamma", "lambda")
+  names(out$par) <- c(colnames(X), "lnsigmaA", "lnmuA", "lnlambda")
   return(out)
 }
 
