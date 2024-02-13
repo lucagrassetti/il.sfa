@@ -156,10 +156,9 @@ estim_EHET <- function(X, y, z, group, ols, nq = 25, niter = 10,
   obj.gh <- statmod::gauss.quad(nq, "hermite")
   ws <- obj.gh$weights * exp(obj.gh$nodes^2)
   if(is.null(init)) init <- c(ols$beta, ols$sA, 0, 0)
-  H <- if(useHess) numDeriv::hessian(likEHETall, init,  X = X, list_y = list_y, list_z = list_z, group = group,
+  H <- if(useHess) {numDeriv::hessian(likEHETall, init,  X = X, list_y = list_y, list_z = list_z, group = group,
                                      alphainit = ols$alpha, niter = niter,
-                                     ws = ws, nodes = obj.gh$nodes)
-       else diag(length(init))
+                                     ws = ws, nodes = obj.gh$nodes)} else diag(length(init))
   L1 <- solve(H)[lower.tri(H, diag=TRUE)]
   ogg <- ucminf::ucminf(init, likEHETall, X = X, list_y = list_y,  list_z = list_z, group = group,
                         alphainit = ols$alpha, niter = niter,
@@ -300,7 +299,6 @@ estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
                     initNM = TRUE, useHess = TRUE, grafd = "central"){
   p <- ncol(X)
   list_y <- split(y, group)
-  ols$sA <- sqrt(sum(ols$residuals^2) / (nrow(X) - max(group) - 1))
   list_eta <- split(X * ols$beta, group)
   obj.gh <- statmod::gauss.quad(nq, "hermite")
   ws <- obj.gh$weights * exp(obj.gh$nodes^2)
