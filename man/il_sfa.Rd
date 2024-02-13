@@ -88,9 +88,9 @@ A list including
 
 -- the standard errors of the estimated parameters (\code{se})
 
--- the firm specific effects (\code{alphai}, still not available for the gamma model), and
+-- the firm specific effects (\code{alphai}), and
 
--- the estimated efficiency related terms (\code{uit}, still not available for the gamma model).
+-- the estimated efficiency related terms (\code{uit}, yet not available for the gamma model).
 }
 \description{
 This function adopts the IL approach to the estimation of some kind of SF models
@@ -123,9 +123,9 @@ mle
 
 }
 \references{
-Belotti, F., & Ilardi, G. (2018). Consistent inference in
-fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
-
-Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
+Bellio, R. & Grassetti, L. (2023). Efficient estimation of true
 fixed-effects stochastic frontier models. Submitted
+
+Belotti, F. & Ilardi, G. (2018). Consistent inference in
+fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
 }

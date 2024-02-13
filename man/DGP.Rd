@@ -88,9 +88,9 @@ for(i in 1:4) print(MSE(res_N100_Stata[1:nsimul,i], para[i]))
 
 }
 \references{
-Belotti, F., & Ilardi, G. (2018). Consistent inference in
-fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
-
-Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
+Bellio, R. & Grassetti, L. (2023). Efficient estimation of true
 fixed-effects stochastic frontier models. Submitted
+
+Belotti, F. & Ilardi, G. (2018). Consistent inference in
+fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
 }

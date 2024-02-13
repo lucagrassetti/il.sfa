@@ -33,10 +33,10 @@ in this library.
 data(res_N100_Stata)
 }
 \references{
-Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
+Bellio, R. & Grassetti, L. (2023). Efficient estimation of true
 fixed-effects stochastic frontier models. Submitted.
 
-Belotti, F., Daidone, S., Ilardi, G., Atella, V., 2013. Stochastic frontier
+Belotti, F., Daidone, S., Ilardi, G. & Atella, V. (2013). Stochastic frontier
 analysis using Stata. The Stata Journal 13, 719-758
 }
 \keyword{datasets}
