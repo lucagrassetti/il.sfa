@@ -2,8 +2,8 @@
 #'
 #' The DGP is defined as
 #' \deqn{y_{it} = \alpha_i + x_{it}^T \beta - u_{it} + v_{it}}
-#' where \eqn{u_{it}} can be Half-Normal or Exponential and in this last
-#' case can also consider the mean of the Exponential distribution as
+#' where \eqn{u_{it}} can be Half-Normal, Gamma, or Exponential. In this last
+#' case, it can also consider the mean of the Exponential distribution as
 #' \deqn{\sigma_{uit} = \exp\left(\gamma_0 + \gamma_1 z_{it}\right).}
 #' This last definition also brings to time-constant cases when
 #' \eqn{z_{it}} is considered constant over time.
@@ -12,7 +12,7 @@
 #' @param m the time dimension.
 #' @param param the vector of model parameters (the frontier regression parameters - \eqn{\beta},
 #' the idiosyncratic error variance - \eqn{\sigma_v},
-#' the vector of the parameters describing the efficiency behaviour - \eqn{\gamma}).
+#' the vector of the parameters describing the efficiency behavior - \eqn{\gamma}).
 #' @param model the kind of distribution considered to generate the efficiency-related terms.
 #' @param seed.val the seed value used to make the simulations reproducible.
 #' @param nsim an integer indicating the number of simulated datasets.
