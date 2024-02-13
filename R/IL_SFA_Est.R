@@ -213,7 +213,7 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,
   }
   if(sum(distr %in% c("HN", "Exp", "Gamma"))==0)
   {
-    print("Error: distr must be HN - Half-Normal or Exponential - Exp.")
+    print("Error: distr must be HN (Half-Normal), Gamma (Gamma), or Exponential (Exp).")
     mle <- NULL
   }
   mle
