@@ -155,7 +155,7 @@ estim_EHET <- function(X, y, z, group, ols, nq = 25, niter = 10,
   p <- ncol(X)
   obj.gh <- statmod::gauss.quad(nq, "hermite")
   ws <- obj.gh$weights * exp(obj.gh$nodes^2)
-  if(is.null(init)) init <- c(ols$beta, 0, 0, 0)
+  if(is.null(init)) init <- c(ols$beta, ols$sA, 0, 0)
   H <- if(useHess) numDeriv::hessian(likEHETall, init,  X = X, list_y = list_y, list_z = list_z, group = group,
                                      alphainit = ols$alpha, niter = niter,
                                      ws = ws, nodes = obj.gh$nodes)
@@ -209,7 +209,7 @@ estim_EXP <- function(X, y, group, ols, nq = 25, niter = 10,
   p <- ncol(X)
   obj.gh <- statmod::gauss.quad(nq, "hermite")
   ws <- obj.gh$weights * exp(obj.gh$nodes^2)
-  if(is.null(init)) init <- c(ols$beta, 0, 0)
+  if(is.null(init)) init <- c(ols$beta,  ols$sA,  0)
   H <- if(useHess) numDeriv::hessian(likEXPall, init,  X = X, list_y = list_y,  group = group,
                                      alphainit = ols$alpha, niter = niter,
                                      ws = ws, nodes = obj.gh$nodes)
@@ -297,7 +297,7 @@ likGamma.cons <- function(para, b, sA, X, group, list_y, alphacenter, ws, nodes,
 estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
                     niter = 10, umeth = "GS", initdelta = 0.5,
                     init = NULL,  trace = TRUE, int.trace = FALSE,
-                    initNM = TRUE, useHess = TRUE){
+                    initNM = TRUE, useHess = TRUE, grafd = "central"){
   p <- ncol(X)
   list_y <- split(y, group)
   ols$sA <- sqrt(sum(ols$residuals^2) / (nrow(X) - max(group) - 1))
@@ -307,6 +307,11 @@ estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
   initA <- if(is.null(init)) c(ols$beta, log(ols$sA), log(ols$sA^2 - initdelta), 0)
   else init
   if(initNM){
+    ee <- estim_EXP(X, y, group, ols, nq = nq, niter = niter, init = NULL, useHess = TRUE,
+                    trace = trace, grtol = 10^-6, grad = "central")
+    sigma <-  ee[p + 1]
+    beta <- ee[1:p]
+    lambda <- ee[p + 2]
     if(trace) cat("Searching for initial points...", "\n")
     mleinit <-  optim(c(log(ols$sA^2 - initdelta), 0), b = ols$beta, sA = ols$sA,
                       likGamma.cons,  X = X, list_y = list_y,
