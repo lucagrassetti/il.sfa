@@ -19,9 +19,9 @@
 #' reference papers.
 #' N = 100, T = 5, beta = 1, gamma_0 = 1.5, gamma_1 = 1 and sigma_v = 0.25}
 #'
-#' @references Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
+#' @references Bellio, R. & Grassetti, L. (2023). Efficient estimation of true
 #' fixed-effects stochastic frontier models. Submitted.
-#' @references Belotti, F., Daidone, S., Ilardi, G., Atella, V., 2013. Stochastic frontier
+#' @references Belotti, F., Daidone, S., Ilardi, G. & Atella, V. (2013). Stochastic frontier
 #' analysis using Stata. The Stata Journal 13, 719-758
 #'
 #' @examples

@@ -52,13 +52,13 @@
 #' @return -- the parameters point estimates (\code{par}),
 #' @return -- the inverse of the numerical hessian (\code{invhes}),
 #' @return -- the standard errors of the estimated parameters (\code{se})
-#' @return -- the firm specific effects (\code{alphai}, still not available for the gamma model), and
-#' @return -- the estimated efficiency related terms (\code{uit}, still not available for the gamma model).
+#' @return -- the firm specific effects (\code{alphai}), and
+#' @return -- the estimated efficiency related terms (\code{uit}, yet not available for the gamma model).
 #'
-#' @references Belotti, F., & Ilardi, G. (2018). Consistent inference in
-#' fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
-#' @references Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
+#' @references Bellio, R. & Grassetti, L. (2023). Efficient estimation of true
 #' fixed-effects stochastic frontier models. Submitted
+#' @references Belotti, F. & Ilardi, G. (2018). Consistent inference in
+#' fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
 #'
 #' @examples
 #' # Generate one single dataset with the setting used in Table 1, (a)
@@ -75,7 +75,10 @@
 #' mle
 #'
 #' @export
-il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,nq = 25, niter = 10, init = NULL, Kinit = 5, initdelta = 0.5, useHess = TRUE, trace = 0, int.trace = FALSE, initNM = TRUE, grtol = 10^-6, eps = 10^-4, grad = "central", umeth = "GS")
+il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,nq = 25, niter = 10,
+                   init = NULL, Kinit = 5, initdelta = 0.5, useHess = TRUE, trace = 0,
+                   int.trace = FALSE, initNM = TRUE, grtol = 10^-6, eps = 10^-4,
+                   grad = "central", umeth = "GS")
 {
   X_plus <- model.matrix(~factor(group)-1+X)
   ols2 <- RcppEigen::fastLmPure(X_plus, y)
@@ -162,6 +165,8 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,nq = 25, nit
   }
   if(distr == "Gamma")
   {
+    int.trace <- TRUE
+    trace <- 1
     if(het == TRUE)
     {
       print("Heteroschedastic errors are still not supported for Gamma distribution.")
@@ -199,7 +204,7 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,nq = 25, nit
         mle <- estim_G(X = X, y = y, group = group,
                        ols = ols, nq = nq, eps = eps, Kinit = Kinit,
                        niter = niter, umeth = umeth, initdelta = initdelta,
-                       int.trace = int.trace, init = init,  trace = trace,
+                       int.trace = int.trace, init = init, trace = trace,
                        initNM = initNM,
                        useHess = FALSE)
       }

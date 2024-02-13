@@ -43,10 +43,10 @@
 #' homoscedastic and heteroscedastic Exponential (\code{Exp}),
 #' and homoscedastic Gamma (\code{Gamma}).
 #'
-#' @references Belotti, F., & Ilardi, G. (2018). Consistent inference in
-#' fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
-#' @references Bellio, R., & Grassetti, L. (2023). Efficient estimation of true
+#' @references Bellio, R. & Grassetti, L. (2023). Efficient estimation of true
 #' fixed-effects stochastic frontier models. Submitted
+#' @references Belotti, F. & Ilardi, G. (2018). Consistent inference in
+#' fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
 #'
 #' @examples
 #'
@@ -59,7 +59,7 @@
 #' res <- matrix(0, nrow = nsimul, ncol=4)
 #' for(i in 1:nrow(res)){
 #'   print(i)
-#'   mle <- il_sfa(X = dat$x, y = dat$daty[1,], distr = "Exp", het = TRUE, z = dat$datz,
+#'   mle <- il_sfa(X = dat$x, y = dat$daty[i,], distr = "Exp", het = TRUE, z = dat$datz,
 #'                 group = dat$g, useHess = TRUE)
 #'   res[i,] <- mle$par
 #'   }

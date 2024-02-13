@@ -44,15 +44,15 @@ estim_HN <- function(X, y, group, ols, nq = 25, niter = 10,
                         control = list(grad = grad, trace = trace, invhessian.lt = L1, grtol = grtol))
   out  <- list(par = getsig(ogg$par))
   names(out$par) <- c(colnames(X), "sigmau", "sigmav")
+  out$alphai <- alphaiHN(para = ogg$par, X = X, group = group, list_y = list_y,
+                         niter=niter, uinit = rep(0, length(y)))
   hes <- numDeriv::hessian(likHNall_orig, out$par,  X = X, list_y = list_y,  group = group,
-                           alphainit = ols$alpha, niter = niter,
+                           alphainit = out$alphai, niter = niter,
                            ws = ws, nodes = obj.gh$nodes)
   colnames(hes) <- rownames(hes) <- c(colnames(X), "sigmau", "sigmav")
   out$invhes <- solve(hes)
   out$se <- sqrt(diag(out$invhes))
   names(out$se) <- c(colnames(X), "sigmau", "sigmav")
-  out$alphai <- alphaiHN(para = ogg$par, X = X, group = group, list_y = list_y,
-                           niter=niter, uinit = rep(0, length(y)))
   out$uit <- extractUit_HN(para = out$par, X = X, y = y, group = group, alphai = out$alphai)
   return(out)
 }
@@ -163,15 +163,15 @@ estim_EHET <- function(X, y, z, group, ols, nq = 25, niter = 10,
   out  <- list(par = ogg$par)
   names(out$par) <- c(colnames(X), "gamma1", "gamma2", "sigma_v")
   out$par[p + 3] <- exp(out$par[p + 3])
+  out$alphai <- alphaiEHET(para = ogg$par, X = X, group = group, list_y = list_y,
+                           list_z = list_z, niter=niter, uinit = rep(0, length(y)))
   hes <- numDeriv::hessian(likEHETall_orig, out$par,  X = X, list_y = list_y, list_z = list_z, group = group,
-                           alphainit = ols$alpha, niter = niter,
+                           alphainit = out$alphai, niter = niter,
                            ws = ws, nodes = obj.gh$nodes)
   colnames(hes) <- rownames(hes) <- c(colnames(X), "gamma1", "gamma2", "sigma_v")
   out$invhes <- solve(hes)
   out$se <- sqrt(diag(out$invhes))
   names(out$se) <- c(colnames(X), "gamma1", "gamma2", "sigma_v")
-  out$alphai <- alphaiEHET(para = ogg$par, X = X, group = group, list_y = list_y,
-                    list_z = list_z, niter=niter, uinit = rep(0, length(y)))
   out$uit <- extractUit_EHET(para = out$par, X = X, y = y, z = z, group = group, alphai = out$alphai)
   return(out)
 }
@@ -199,7 +199,8 @@ estim_EXP <- function(X, y, group, ols, nq = 25, niter = 10,
                      trace = 0, grtol = 10^-6,
                      grad = "central"){
   list_y <- split(y, group)
-  list_z <- split(rep(1,length(y)), group)
+  z <- rep(1,length(y))
+  list_z <- split(z, group)
   p <- ncol(X)
   obj.gh <- statmod::gauss.quad(nq, "hermite")
   ws <- obj.gh$weights * exp(obj.gh$nodes^2)
@@ -216,15 +217,15 @@ estim_EXP <- function(X, y, group, ols, nq = 25, niter = 10,
   out  <- list(par = ogg$par)
   names(out$par) <- c(colnames(X), "gamma", "sigmav")
   out$par[p + 2] <- exp(out$par[p + 2])
+  out$alphai <- alphaiEHET(para = c(ogg$par[1:p],ogg$par[p+1], 0,ogg$par[p+2]), X = X, group = group, list_y = list_y,
+                           list_z = list_z, niter=niter, uinit = rep(0, length(y)))
   hes <- numDeriv::hessian(likEXPall_orig, out$par,  X = X, list_y = list_y,  group = group,
-                           alphainit = ols$alpha, niter = niter,
+                           alphainit = out$alphai, niter = niter,
                            ws = ws, nodes = obj.gh$nodes)
   colnames(hes) <- rownames(hes) <- c(colnames(X), "gamma", "sigmav")
   out$invhes = solve(hes)
   out$se <- sqrt(diag(out$invhes))
   names(out$se) <- c(colnames(X), "gamma", "sigma_v")
-  out$alphai <- alphaiEHET(para = c(ogg$par[1:p],ogg$par[p+1], 0,ogg$par[p+2]), X = X, group = group, list_y = list_y,
-                           list_z = list_z, niter=niter, uinit = rep(0, length(y)))
   out$uit <- extractUit_EHET(para = c(out$par[1:p],out$par[p+1],0,out$par[p+2]), X = X, y = y, z =z, group = group, alphai = out$alphai)
 
   return(out)
@@ -305,15 +306,40 @@ estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
                         alphacenter = ols$alpha + exp(mleinit$par[1]),
                         group = group, ws = ws, nodes = obj.gh$nodes,
                         Kinit = Kinit, eps = eps, trace = int.trace,
-                        control = list(trace = trace, grtol = eps * 10^3, invhessian.lt = L1))
+                        control = list(trace = trace, grtol = eps * 10^3,
+                                       invhessian.lt = L1))
   out <- mle
+
   alpha <- exp(mle$par[2 + p] - mle$par[3 + p])
   sigma <- sqrt(exp(mle$par[p + 1] * 2) - alpha * exp(mle$par[p + 3] * 2))
   out$paraorig <- c(mle$par[1], sigma, alpha, exp(mle$par[p + 3]))
   names(out$paraorig) <- c(colnames(X), "sigma", "gamma", "lambda")
   names(out$par) <- c(colnames(X), "lnsigmaA", "lnmuA", "lnlambda")
-  return(out)
+  out$alphai <- alphaiGamma(para = out$paraorig, X = X, group = group, list_y = list_y,
+                            niter=niter, uinit = rep(0, length(y)))
+
+  hes <- numDeriv::hessian(likGamma, mle$par,  X = X, list_y = list_y,
+                           alphacenter = out$alphai + exp(mle$par[1]),
+                           group = group, ws = ws, nodes = obj.gh$nodes,
+                           Kinit = Kinit, eps = eps, trace = int.trace)
+  colnames(hes) <- rownames(hes) <- c(colnames(X), "lnsigmaA", "lnmuA", "lnlambda")
+  out$invhes = solve(hes)
+  out$se <- sqrt(diag(out$invhes))
+  names(out$se) <- c(colnames(X), "lnsigmaA", "lnmuA", "lnlambda")
+
+  out2 <- list(par = out$par, invhes = out$invhes, se = out$se, alphai = out$alphai)
+  return(out2)
 }
 
-
+alphaiGamma <- function(para, X, group, list_y, niter, uinit){
+  p <- ncol(X)
+  lnsigma <- log(para[p+1])
+  lnlambda <- log(para[p+3])
+  lnalpha <- log(para[p+2])
+  eta <- as.vector(as.matrix(X) %*% para[1:p])
+  list_eta <- split(eta, group)
+  alphai <- getEffectsG(lnsigma, lnlambda, lnalpha, list_eta, list_y,
+                         niter, uinit)
+  return(alphai)
+}
 
