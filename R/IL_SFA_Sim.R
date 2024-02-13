@@ -12,7 +12,11 @@
 #' @param m the time dimension.
 #' @param param the vector of model parameters (the frontier regression parameters - \eqn{\beta},
 #' the idiosyncratic error variance - \eqn{\sigma_v},
-#' the vector of the parameters describing the efficiency behavior - \eqn{\gamma}).
+#' the vector of the parameters describing the efficiency behavior - \eqn{\gamma}). 
+#' \eqn{\gamma} depends on \eqn{u_{it}} distribution choice. 
+#' In the half-normal case, it corresponds to \eqn{\sigma_u}. In the exponential case, it collects 
+#' \eqn{\gamma_0} and \eqn{\gamma_1} defined in the formula above.
+#' In the gamma case, it corresponds to the shape and scale parameters of the gamma distribution.
 #' @param model the kind of distribution considered to generate the efficiency-related terms.
 #' @param seed.val the seed value used to make the simulations reproducible.
 #' @param nsim an integer indicating the number of simulated datasets.
@@ -32,10 +36,10 @@
 #' fairly executable. Changing the nsim parameter, one can consider the
 #' original simulation with 1000 replications. set.seed = 22 is used to generate the
 #' data analysed with Stata and R and compared in Bellio and Grassetti (2023).
-#' In the cited papers, the simulations use a number of replication equal to 1000.
-#' The available distributions for the efficiency term are: homoschedastic half normal "HN",
-#' homoschedastic and heteroschedastic Exponential ("Exp"),
-#' and homoschedastic Gamma ("Gamma").
+#' In the cited papers, the simulations use a number of replications equal to 1000.
+#' The available distributions for the efficiency term are homoscedastic half normal "HN",
+#' homoscedastic and heteroscedastic Exponential ("Exp"),
+#' and homoscedastic Gamma ("Gamma").
 #'
 #' @references Belotti, F., & Ilardi, G. (2018). Consistent inference in
 #' fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.
