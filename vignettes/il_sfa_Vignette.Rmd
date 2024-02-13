@@ -117,6 +117,8 @@ and operates a feasible estimation sending a warning message.
 ```{r }
 mle <- il_sfa(X = dat$x, y = dat$daty[1,], distr = "HN", het = TRUE, z = dat$datz,
               group = dat$g, useHess = TRUE)
+
+mle
 ```
 
 ## Developing a simulation study using `il_sfa` and `DGP` functions
@@ -169,6 +171,7 @@ for(i in 1:4) print(MSE(res_N100_Stata[1:nsimul,i], para[i]))
 ```
 
 The estimation results are quite similar, but the IL MSE are always a bit lower than the PDE ones.
+
 
 
 ## References

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>True Fixed Effect Stochastic Frontier Models Estimation via Integrated Likelihood: ilsfa package</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">True Fixed Effect Stochastic Frontier
+Models Estimation via Integrated Likelihood: ilsfa package</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(ilsfa)</span></code></pre></div>
+<p>The package uses <code>R</code> and <code>Rcpp</code> code to manage
+the estimation of True Fixed Effect Stochastic Frontier Model (TFE SFM)
+via Integrated Likelihood (IL). In particular, the code includes two
+principal functions that are fully described in the package help
+documentation, and a bunch of background functions (most of them written
+in <code>Rcpp</code>) used to make the code computationally efficient.
+The present vignette focuses on the usage of</p>
+<ul>
+<li><code>il_sfa</code> function for the model estimation and</li>
+<li><code>DGP</code> function for the data generating process adopted in
+the simulation studies (see Bellio and Grassetti, 2023).</li>
+</ul>
+<div id="estimating-tfe-sfm-via-il" class="section level2">
+<h2>Estimating TFE SFM via IL</h2>
+<p>The <code>il_sfa</code> function allows estimating the frontier model
+defined in Belotti and Ilardi (2018) and Bellio and Grassetti (2023), by
+using a feasible, generalizable and computationally efficient approach
+based on the integrated likelihood. In particular, the integrated
+likelihood approach works integrating-out the panel-specific intercepts
+from the likelihood function, solving the incidental parameters issue
+without loss in estimation efficiency.</p>
+<p>For a production frontier model, the specification of the true fixed
+effects model is given by</p>
+<p><span class="math display">\[\begin{equation}
+\label{spec}
+y_{it} =  \alpha_i + x_{it}^\top\beta  - u_{it} + \nu_{it} \, ,
+\end{equation}\]</span> where <span class="math inline">\(i\)</span> is
+the index for panel (<span class="math inline">\(i=1,\ldots,n\)</span>)
+and <span class="math inline">\(t\)</span> is the index for time (<span class="math inline">\(t=1,\ldots,T)\)</span>, with the panel size <span class="math inline">\(T\)</span> assumed to be the same across panels
+without loss of generality. Here <span class="math inline">\(y_{iy}\)</span> is the output and <span class="math inline">\(x_{it}\)</span> a vector of exogenous inputs, both
+possibly in log form, <span class="math inline">\(\beta\)</span> is a
+vector of structural coefficients and <span class="math inline">\(\alpha_i\)</span> the panel fixed effect; in the
+following, we will also employ <span class="math inline">\(y_i\)</span>
+and <span class="math inline">\(X_i\)</span> to denote the vector of
+outputs and the matrix of inputs for the <span class="math inline">\(i\)</span>-th panel, respectively. Finally, <span class="math inline">\(u_{it}\)</span> is the one-sided inefficiency
+term, and <span class="math inline">\(v_{it}\)</span> is the symmetric
+idiosyncratic error, independent of <span class="math inline">\(u_{it}\)</span>. A simple change in the <span class="math inline">\(u_{it}\)</span> sign is required for a cost
+frontier model.</p>
+<p>The theory for composite group families implies that a location
+parameter might be eliminated simply by integrating it, with no loss of
+information. In other words, a general marginal log-likelihood for <span class="math inline">\(\theta = \left\{\beta, \sigma\right\}\)</span> can
+be defined as <span class="math display">\[\begin{equation}
+\label{inte}
+\ell_{\rm M}(\theta) = \sum_{i=1}^n \log \int_{-\infty}^\infty
+f(y_i;\alpha_i, \theta) d \alpha_ i \, ,
+\end{equation}\]</span> where <span class="math inline">\(f(y_i;\alpha_i, \theta)\)</span> is the density
+function of <span class="math inline">\(y_i\)</span>.</p>
+<p>Mimicking the Data Generating Process introduced in Belotti and
+Ilardi (2018), we can generate one single dataset with the setting used
+in Table 1, namely <span class="math inline">\(N=100\)</span>, <span class="math inline">\(T=5\)</span>, <span class="math inline">\(\beta =
+1\)</span>, <span class="math inline">\(\gamma_0 = -1.5\)</span>, <span class="math inline">\(\gamma_1 = 1\)</span>, and <span class="math inline">\(\sigma_v = 0.25\)</span>. A small number of
+replications (10) are considered here.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>para <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="sc">-</span><span class="fl">1.5</span>,<span class="dv">1</span>,<span class="fl">0.25</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">DGP</span>(N, T, <span class="fu">list</span>(<span class="at">beta=</span>para[<span class="dv">1</span>], <span class="at">sigmav=</span>para[<span class="dv">4</span>], <span class="at">gamma=</span>para[<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]), <span class="at">model =</span> <span class="st">&quot;Exp&quot;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>           <span class="at">seed.val =</span> <span class="dv">22</span>, <span class="at">nsim =</span> <span class="dv">10</span>)</span></code></pre></div>
+<p>The estimation function needs a set of mandatory arguments, including
+all the data used in model specification.</p>
+<ul>
+<li>a vector for the response variable,</li>
+<li>a matrix for the independent variables,</li>
+<li>a vector for the identifier of groups (cross-sectional units),
+and</li>
+<li>a vector for the variable influencing the variance of the
+efficiency-specific error term.</li>
+</ul>
+<p>The estimation result is obtained here considering the following
+additional arguments.</p>
+<ul>
+<li><code>distr</code> to specify the distribution of the
+efficiency-related error term. <code>Exp</code> stands for Exponential
+distribution.</li>
+<li><code>het</code> to specify the presence of heteroscedasticity
+affecting the efficiency-related error term. <code>TRUE</code> means
+that the variance term <span class="math inline">\(\sigma_{iu}\)</span>
+is defined as <span class="math inline">\(e^{\gamma_0 +
+\gamma_1z_it}\)</span>.</li>
+<li><code>useHess</code> to manage the initialization of the
+maximization procedure. <code>TRUE</code> means that the likelihood
+maximization is initialized with the numerical Hessian; otherwise, the
+Hessian is initialized as a unit diagonal.</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>mle <span class="ot">&lt;-</span> <span class="fu">il_sfa</span>(<span class="at">X =</span> dat<span class="sc">$</span>x, <span class="at">y =</span> dat<span class="sc">$</span>daty[<span class="dv">1</span>,], <span class="at">distr =</span> <span class="st">&quot;Exp&quot;</span>, <span class="at">het =</span> <span class="cn">TRUE</span>, <span class="at">z =</span> dat<span class="sc">$</span>datz,</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>              <span class="at">group =</span> dat<span class="sc">$</span>g, <span class="at">useHess =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>mle</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; $par</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;        x1    gamma1    gamma2   sigma_v </span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt;  1.000378 -1.331961  0.870216  0.220078 </span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; $invhes</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;                    x1        gamma1       gamma2       sigma_v</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; x1       9.745306e-04  0.0003379007 -0.000191250 -5.961303e-05</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; gamma1   3.379007e-04  0.0560485045 -0.035234678 -7.596742e-03</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; gamma2  -1.912500e-04 -0.0352346783  0.025718700  4.873685e-03</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; sigma_v -5.961303e-05 -0.0075967416  0.004873685  1.280919e-03</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; $se</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt;         x1     gamma1     gamma2    sigma_v </span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; 0.03121747 0.23674565 0.16037051 0.03578993 </span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; $alphai</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt;   [1] -0.33083939  2.64570808  1.00132290  0.37574970 -0.15354660  1.88361360</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt;   [7] -0.34025720 -0.37396701 -0.17737209  0.75581461 -0.60327523  0.41876440</span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt;  [13]  0.96097551 -0.47928304 -0.81190968 -0.89287268  0.99170623  1.78112950</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt;  [19]  1.06714946 -1.52676828 -0.63115571 -0.06414128 -0.70272229 -1.12364900</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt;  [25] -0.48236959  0.53482935 -0.08680638 -0.95938735  0.66739771 -1.15655795</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt;  [31]  0.50935302 -1.21689692  0.50998103 -0.79956161 -0.89696939 -1.56878095</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt;  [37] -0.04839203  1.01114458 -1.22425108 -0.33250394 -0.19942270  0.92690204</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt;  [43]  0.61515009  1.98364907  1.02249997  3.25141673 -0.22713530  0.36112127</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt;  [49] -1.15112776  1.01392806 -0.86332172  0.58391454 -1.66923657  0.50818461</span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt;  [55]  1.42364525  0.05177328  1.58212401 -0.46917987  1.05089119 -0.07017703</span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt;  [61] -0.75605973  1.25675361 -0.05654468  0.16503907 -0.89412332  1.70497405</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt;  [67]  0.41150107  2.02321093 -0.13994958 -0.86121223 -0.66607616 -0.09832417</span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt;  [73] -0.51634383 -0.15212964  0.39588122 -0.52378146 -0.64282689  0.39180400</span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt;  [79]  2.10264640  1.11448571  1.24947452  0.54215712 -0.66558765  0.67169869</span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#&gt;  [85]  1.74934504 -1.94251666  0.64269336 -1.41186946 -1.07002603 -1.73242531</span></span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a><span class="co">#&gt;  [91]  0.56119328 -0.89774926  0.54343976 -0.41732683  0.70006508 -0.07202855</span></span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a><span class="co">#&gt;  [97] -0.23795861 -0.35619327 -0.60482511 -0.50569658</span></span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a><span class="co">#&gt; $uit</span></span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="co">#&gt;   [1]  1.1108866  2.0061245  1.4876428  0.1852065  0.9193740  0.6684486</span></span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a><span class="co">#&gt;   [7]  0.3709583  0.1966808  0.1346883  0.7388069  1.4207337  0.5482915</span></span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a><span class="co">#&gt;  [13]  0.3614703  0.5029316  0.1414824  0.4488159  0.3793902  0.4205939</span></span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a><span class="co">#&gt;  [19]  0.1755710  0.1610450  0.2549185  0.6174332  0.4700131  0.1727311</span></span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a><span class="co">#&gt;  [25]  0.2638664  0.5959343  0.2622944  0.2192043  0.1697773  0.3951094</span></span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a><span class="co">#&gt;  [31]  0.2889369  0.4332072  0.4870011  0.1351988  0.4555088  0.2256664</span></span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a><span class="co">#&gt;  [37]  0.3107803  0.6155961  0.3352424  0.3108779  0.3512470  0.2895417</span></span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a><span class="co">#&gt;  [43]  0.2846570  0.2579182  0.1946284  2.3851560  1.0667080  0.1856298</span></span>
+<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a><span class="co">#&gt;  [49]  0.1980532  0.8087593  0.2372130  0.3809599  0.2164027  0.2595418</span></span>
+<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a><span class="co">#&gt;  [55]  0.3261371  0.6646486  0.1666503  1.2240086  0.1741586  0.3005455</span></span>
+<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a><span class="co">#&gt;  [61]  0.6479118  0.3882358  0.1838267  0.1838594  0.3388330  0.1930599</span></span>
+<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a><span class="co">#&gt;  [67]  4.3885811  0.7873154  1.4762243  0.3548350  0.4363397  1.2722941</span></span>
+<span id="cb3-51"><a href="#cb3-51" tabindex="-1"></a><span class="co">#&gt;  [73]  0.4904358  0.1591020  0.5477477  0.1819121  0.3265757  0.3701831</span></span>
+<span id="cb3-52"><a href="#cb3-52" tabindex="-1"></a><span class="co">#&gt;  [79]  0.5280740  0.2352982  1.8656326  0.2525243  0.2528031  0.2370731</span></span>
+<span id="cb3-53"><a href="#cb3-53" tabindex="-1"></a><span class="co">#&gt;  [85]  1.3778924  0.2436778  0.2238808  0.3867953  0.3406703  1.6754415</span></span>
+<span id="cb3-54"><a href="#cb3-54" tabindex="-1"></a><span class="co">#&gt;  [91]  0.2379109  0.2555740  0.7784629  0.4525519  0.1984712  0.2704573</span></span>
+<span id="cb3-55"><a href="#cb3-55" tabindex="-1"></a><span class="co">#&gt;  [97]  0.3327242  0.1364061  0.6121768  0.2534360  1.1732425  0.5982381</span></span>
+<span id="cb3-56"><a href="#cb3-56" tabindex="-1"></a><span class="co">#&gt; [103]  0.2122790  0.2049271  0.7357904  0.3304225  0.7071982  0.3010670</span></span>
+<span id="cb3-57"><a href="#cb3-57" tabindex="-1"></a><span class="co">#&gt; [109]  0.4051968  0.1735360  0.4867240  0.7337748  0.2436914  0.1279677</span></span>
+<span id="cb3-58"><a href="#cb3-58" tabindex="-1"></a><span class="co">#&gt; [115]  0.6475654  0.4729730  0.2231705  0.2062323  0.7754636  1.7300743</span></span>
+<span id="cb3-59"><a href="#cb3-59" tabindex="-1"></a><span class="co">#&gt; [121]  0.3052730  0.2862550  0.2803880  0.3013469  0.4337809  0.2812370</span></span>
+<span id="cb3-60"><a href="#cb3-60" tabindex="-1"></a><span class="co">#&gt; [127]  0.2245735  0.2820676  0.7030756  0.3119998  1.9918415  0.2606232</span></span>
+<span id="cb3-61"><a href="#cb3-61" tabindex="-1"></a><span class="co">#&gt; [133]  0.1984068  0.6657682  1.2517098  0.1605509  0.2575918  0.3692362</span></span>
+<span id="cb3-62"><a href="#cb3-62" tabindex="-1"></a><span class="co">#&gt; [139]  0.2858160  0.7239034  0.7248134  0.2117886  0.1466330  1.0491059</span></span>
+<span id="cb3-63"><a href="#cb3-63" tabindex="-1"></a><span class="co">#&gt; [145]  0.6473292  0.8242202  1.4867280  0.2484698  0.2419520  0.8784545</span></span>
+<span id="cb3-64"><a href="#cb3-64" tabindex="-1"></a><span class="co">#&gt; [151]  0.2626493  0.5598798  0.3653932  0.1516741  0.7655104  0.1839936</span></span>
+<span id="cb3-65"><a href="#cb3-65" tabindex="-1"></a><span class="co">#&gt; [157]  0.3012271  0.2049724  0.3704030  1.0263480  0.7556062  0.4978681</span></span>
+<span id="cb3-66"><a href="#cb3-66" tabindex="-1"></a><span class="co">#&gt; [163]  0.6481269  0.1624411  0.1699399  0.3848446  0.3665083  0.1213392</span></span>
+<span id="cb3-67"><a href="#cb3-67" tabindex="-1"></a><span class="co">#&gt; [169]  0.4452150  0.2486654  0.1931109  0.2689592  0.5128358  0.3716331</span></span>
+<span id="cb3-68"><a href="#cb3-68" tabindex="-1"></a><span class="co">#&gt; [175]  0.1841216  1.1792078  7.1664244  2.0478773  0.1972803  3.1098001</span></span>
+<span id="cb3-69"><a href="#cb3-69" tabindex="-1"></a><span class="co">#&gt; [181]  0.4568802  0.1661704  0.3024621  0.2529240  0.7381136  0.2279116</span></span>
+<span id="cb3-70"><a href="#cb3-70" tabindex="-1"></a><span class="co">#&gt; [187]  0.1427867  1.1326102  0.3244698  0.5071345  0.4533781  0.4233845</span></span>
+<span id="cb3-71"><a href="#cb3-71" tabindex="-1"></a><span class="co">#&gt; [193]  0.2036587  0.1977901  0.2305201  0.1806767  0.4270905  0.2527866</span></span>
+<span id="cb3-72"><a href="#cb3-72" tabindex="-1"></a><span class="co">#&gt; [199]  0.1865903  0.4030990  0.1145478  0.2011378  0.3960908  0.3970962</span></span>
+<span id="cb3-73"><a href="#cb3-73" tabindex="-1"></a><span class="co">#&gt; [205]  0.7198057  0.3456278  0.3191643  0.7175780  0.2207668  0.1987162</span></span>
+<span id="cb3-74"><a href="#cb3-74" tabindex="-1"></a><span class="co">#&gt; [211]  0.1889595  0.1666217  0.2757888  1.1392925  0.5310606  0.1826952</span></span>
+<span id="cb3-75"><a href="#cb3-75" tabindex="-1"></a><span class="co">#&gt; [217]  0.3169888  0.8038686  0.1714977  0.2923887  0.2296710  0.6386348</span></span>
+<span id="cb3-76"><a href="#cb3-76" tabindex="-1"></a><span class="co">#&gt; [223]  0.2693452  0.1526751  0.5376513  0.5372444  0.3553080  0.7385115</span></span>
+<span id="cb3-77"><a href="#cb3-77" tabindex="-1"></a><span class="co">#&gt; [229]  0.1832533  0.0996276  0.2851900  0.6127882  0.3414947  0.3163112</span></span>
+<span id="cb3-78"><a href="#cb3-78" tabindex="-1"></a><span class="co">#&gt; [235]  0.1331833  0.1790968  0.4787342  1.2644460  0.3629051  0.2600732</span></span>
+<span id="cb3-79"><a href="#cb3-79" tabindex="-1"></a><span class="co">#&gt; [241]  0.3297779  0.4304045  0.3623832  0.2036052  0.1478823  0.3165181</span></span>
+<span id="cb3-80"><a href="#cb3-80" tabindex="-1"></a><span class="co">#&gt; [247]  0.4825417  0.1845115  0.3008047  0.1683456  0.7969619  0.2077726</span></span>
+<span id="cb3-81"><a href="#cb3-81" tabindex="-1"></a><span class="co">#&gt; [253]  0.1661202  0.2340363  0.2326782  0.1666790  0.6455117  4.7115287</span></span>
+<span id="cb3-82"><a href="#cb3-82" tabindex="-1"></a><span class="co">#&gt; [259]  0.8331429  1.3499244  0.3007882  0.2089723  0.1925424  0.3367402</span></span>
+<span id="cb3-83"><a href="#cb3-83" tabindex="-1"></a><span class="co">#&gt; [265]  1.0036420  0.3653658  0.3447478  0.1239761  0.1132049  0.9058601</span></span>
+<span id="cb3-84"><a href="#cb3-84" tabindex="-1"></a><span class="co">#&gt; [271]  0.2020998  0.8679409  0.3302110  0.3108505  0.4354576  0.3069651</span></span>
+<span id="cb3-85"><a href="#cb3-85" tabindex="-1"></a><span class="co">#&gt; [277]  0.3617927  0.2985780  0.1943264  0.2331225  0.2976461  0.1803714</span></span>
+<span id="cb3-86"><a href="#cb3-86" tabindex="-1"></a><span class="co">#&gt; [283]  1.6340893  0.2776824  0.6091493  0.1640398  0.9827133  3.8663254</span></span>
+<span id="cb3-87"><a href="#cb3-87" tabindex="-1"></a><span class="co">#&gt; [289]  1.8709914  1.2231807  1.0070673  0.1312563  0.3420343  1.2726457</span></span>
+<span id="cb3-88"><a href="#cb3-88" tabindex="-1"></a><span class="co">#&gt; [295]  0.3740004  0.9118348  0.2689002  0.5962339  0.3407064  0.1506563</span></span>
+<span id="cb3-89"><a href="#cb3-89" tabindex="-1"></a><span class="co">#&gt; [301]  0.7937228  0.1040745  0.5501666  0.3839663  0.1729796  1.1427324</span></span>
+<span id="cb3-90"><a href="#cb3-90" tabindex="-1"></a><span class="co">#&gt; [307]  0.2069318  0.8130964  0.9016585  0.2465848  0.2897570  0.3438982</span></span>
+<span id="cb3-91"><a href="#cb3-91" tabindex="-1"></a><span class="co">#&gt; [313]  0.2745277  0.2171288  0.3021760  0.5609808  0.1818358  0.2650693</span></span>
+<span id="cb3-92"><a href="#cb3-92" tabindex="-1"></a><span class="co">#&gt; [319]  0.3081545  0.1942666  0.2792986  0.4205935  0.2876330  0.2280875</span></span>
+<span id="cb3-93"><a href="#cb3-93" tabindex="-1"></a><span class="co">#&gt; [325]  0.1761325  0.4851148  0.3096350  1.6685688  0.2095279  0.2520298</span></span>
+<span id="cb3-94"><a href="#cb3-94" tabindex="-1"></a><span class="co">#&gt; [331]  0.8057728  0.3165008  0.3714023  0.1355078  0.2220039  0.4595822</span></span>
+<span id="cb3-95"><a href="#cb3-95" tabindex="-1"></a><span class="co">#&gt; [337]  0.7565510  0.1595080  0.5953962  0.7042950  0.1490907  0.8186578</span></span>
+<span id="cb3-96"><a href="#cb3-96" tabindex="-1"></a><span class="co">#&gt; [343]  0.3625472  0.2381191  0.3233146  0.4494859  0.8358664  0.1831980</span></span>
+<span id="cb3-97"><a href="#cb3-97" tabindex="-1"></a><span class="co">#&gt; [349]  0.1731966  0.3516614  0.2058815  0.3699302  0.2888867  1.5225872</span></span>
+<span id="cb3-98"><a href="#cb3-98" tabindex="-1"></a><span class="co">#&gt; [355]  0.4020247  0.2547051  0.1202928  0.8622635  0.6233661  0.3700804</span></span>
+<span id="cb3-99"><a href="#cb3-99" tabindex="-1"></a><span class="co">#&gt; [361]  0.1885810  0.8459017  0.2248024  0.3177001  0.4195768  0.7338639</span></span>
+<span id="cb3-100"><a href="#cb3-100" tabindex="-1"></a><span class="co">#&gt; [367]  0.2162941  0.5015691  0.1660532  0.2593637  0.9649408  0.2270972</span></span>
+<span id="cb3-101"><a href="#cb3-101" tabindex="-1"></a><span class="co">#&gt; [373]  0.2985163  0.2057024  0.1729001  0.2004657  0.4251553  0.2548483</span></span>
+<span id="cb3-102"><a href="#cb3-102" tabindex="-1"></a><span class="co">#&gt; [379]  0.2727964  0.6457109  0.5431013  0.4747046  0.5797099  0.1412365</span></span>
+<span id="cb3-103"><a href="#cb3-103" tabindex="-1"></a><span class="co">#&gt; [385]  0.3723783  0.3819079  0.1579870  0.5670888  0.7347059  0.5456300</span></span>
+<span id="cb3-104"><a href="#cb3-104" tabindex="-1"></a><span class="co">#&gt; [391]  0.2243460  0.2915733  0.5900784  0.1574302  0.4239229  0.3945383</span></span>
+<span id="cb3-105"><a href="#cb3-105" tabindex="-1"></a><span class="co">#&gt; [397]  3.1357870  0.4840793  0.2052117  0.4239259  0.2844385  0.2467308</span></span>
+<span id="cb3-106"><a href="#cb3-106" tabindex="-1"></a><span class="co">#&gt; [403]  0.3161806  0.3154926  0.4771428  0.2580343  0.4179431  0.1456924</span></span>
+<span id="cb3-107"><a href="#cb3-107" tabindex="-1"></a><span class="co">#&gt; [409]  0.3265660  0.3270150  2.1024574  0.3084094  0.2078589  1.0109574</span></span>
+<span id="cb3-108"><a href="#cb3-108" tabindex="-1"></a><span class="co">#&gt; [415]  0.2450600  0.2761838  0.7081324  0.1978815  0.1758246  0.5500831</span></span>
+<span id="cb3-109"><a href="#cb3-109" tabindex="-1"></a><span class="co">#&gt; [421]  0.3381412  1.2076636  0.2023182  0.7743605  2.0532215  6.1171874</span></span>
+<span id="cb3-110"><a href="#cb3-110" tabindex="-1"></a><span class="co">#&gt; [427]  0.2603969  1.1526098  0.7257094  9.1295697  1.6982031  0.2173256</span></span>
+<span id="cb3-111"><a href="#cb3-111" tabindex="-1"></a><span class="co">#&gt; [433]  0.7664282  0.3811516  0.1761530  0.2342296  0.8091347  0.3943412</span></span>
+<span id="cb3-112"><a href="#cb3-112" tabindex="-1"></a><span class="co">#&gt; [439]  0.2470048  0.2019115  0.2516420  0.2444985  0.5469604  0.1980559</span></span>
+<span id="cb3-113"><a href="#cb3-113" tabindex="-1"></a><span class="co">#&gt; [445]  0.2304193  0.2776410  0.3801410  0.5227605  0.7113652  0.2104449</span></span>
+<span id="cb3-114"><a href="#cb3-114" tabindex="-1"></a><span class="co">#&gt; [451]  0.5918303  0.1898621  0.1354661  0.2360226  0.3974351  6.3018542</span></span>
+<span id="cb3-115"><a href="#cb3-115" tabindex="-1"></a><span class="co">#&gt; [457]  2.0862221  3.0785209  0.2259623 11.9287913  0.2756346  0.2511670</span></span>
+<span id="cb3-116"><a href="#cb3-116" tabindex="-1"></a><span class="co">#&gt; [463]  0.2478544  0.3382475  0.6162054  0.2518809  0.7171947  0.2407482</span></span>
+<span id="cb3-117"><a href="#cb3-117" tabindex="-1"></a><span class="co">#&gt; [469]  0.7685077  0.4509504  0.4644689  0.1775886  0.2197456  0.1880790</span></span>
+<span id="cb3-118"><a href="#cb3-118" tabindex="-1"></a><span class="co">#&gt; [475]  0.4001320  0.3808321  0.1781484  0.2425175  0.5667405  0.3616810</span></span>
+<span id="cb3-119"><a href="#cb3-119" tabindex="-1"></a><span class="co">#&gt; [481]  2.1385289  0.2617544  1.4547067  0.3105085  0.3357165  0.6736800</span></span>
+<span id="cb3-120"><a href="#cb3-120" tabindex="-1"></a><span class="co">#&gt; [487]  0.2101805  0.5094775  0.2223388  0.1792736  0.1135392  0.2998369</span></span>
+<span id="cb3-121"><a href="#cb3-121" tabindex="-1"></a><span class="co">#&gt; [493]  0.2770319  0.9002889  0.1938608  1.5953058  0.2817895  0.2222232</span></span>
+<span id="cb3-122"><a href="#cb3-122" tabindex="-1"></a><span class="co">#&gt; [499]  0.8082857  0.4185568</span></span></code></pre></div>
+<p>The object created by <code>il_sfa</code> includes:</p>
+<ul>
+<li><code>par</code> the parameters’ point estimates,</li>
+<li><code>invess</code> the inverse of the numerical hessian used to
+compute the standard errors of the estimated parameters,</li>
+<li><code>se</code> the standard errors of the estimated
+parameters,</li>
+<li><code>alphai</code> the firm-specific effects – <span class="math inline">\(\alpha_i\)</span></li>
+<li><code>uit</code> the estimated efficiency-related effects.</li>
+</ul>
+<p>In some specific cases, the function fails, when considering the
+numerical hessian in the initialization of the maximization procedure.
+The estimation routine considers some checks on this issue, adopting the
+unit diagonal solution when the initialization fails.</p>
+<p>In the case of <code>HN</code> model estimation, the heteroscedastic
+efficiency-related errors are still not supported. The estimation
+routine again considers some preliminary checks and operates a feasible
+estimation sending a warning message.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>mle <span class="ot">&lt;-</span> <span class="fu">il_sfa</span>(<span class="at">X =</span> dat<span class="sc">$</span>x, <span class="at">y =</span> dat<span class="sc">$</span>daty[<span class="dv">1</span>,], <span class="at">distr =</span> <span class="st">&quot;HN&quot;</span>, <span class="at">het =</span> <span class="cn">TRUE</span>, <span class="at">z =</span> dat<span class="sc">$</span>datz,</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>              <span class="at">group =</span> dat<span class="sc">$</span>g, <span class="at">useHess =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Heteroschedastic errors are still not supported for Half-Normal distribution.&quot;</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;The estimation results are obtained under homoscedasticity assumption.&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>mle</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; $par</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;         x1     sigmau     sigmav </span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; 0.95085668 1.28359455 0.05944525 </span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; $invhes</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;                  x1        sigmau        sigmav</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; x1     2.276279e-03  2.172016e-05  2.069843e-05</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; sigmau 2.172016e-05  2.238052e-03 -2.104080e-05</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; sigmav 2.069843e-05 -2.104080e-05  5.419818e-04</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; $se</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt;         x1     sigmau     sigmav </span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; 0.04771037 0.04730805 0.02328050 </span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; $alphai</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt;   [1] -0.30053573  2.98695391  1.19446958  0.65323454 -0.02566010  2.14262674</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt;   [7] -0.06042548 -0.33284777  0.02953826  0.83165742 -0.48415841  0.61926533</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt;  [13]  1.16091022 -0.48864592 -0.67588963 -0.74370112  1.01254124  1.83836359</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt;  [19]  1.19143116 -1.23071228 -0.61112507  0.08063100 -0.37672400 -1.07161250</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt;  [25] -0.52172056  0.57581503 -0.04255761 -0.74349028  0.92786843 -1.24535835</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt;  [31]  0.72534110 -1.07071375  0.74216327 -0.43837699 -0.68969614 -1.68037346</span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="co">#&gt;  [37]  0.15024327  1.21464457 -1.06338284 -0.09297783  0.21726071  1.05001458</span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co">#&gt;  [43]  0.84636733  2.27094875  1.28188636  3.84790487  0.10758490  0.48541569</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a><span class="co">#&gt;  [49] -0.84009306  1.30858947 -0.61500740  0.69453878 -1.53560326  0.94632591</span></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="co">#&gt;  [55]  1.51742623  0.23862760  1.71278978 -0.38363623  1.31707621  0.17600359</span></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a><span class="co">#&gt;  [61] -0.26235868  1.30920563  0.01845133  0.38122917 -0.68628646  1.81528370</span></span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a><span class="co">#&gt;  [67]  0.73089816  2.21503793  0.11431933 -0.66806959 -0.64498656  0.27862207</span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a><span class="co">#&gt;  [73] -0.43815734  0.02274520  0.58777228 -0.44377094 -0.37226913  0.55807437</span></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="co">#&gt;  [79]  2.39634078  1.13210547  1.26358966  0.83111886 -0.62663928  0.84693454</span></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="co">#&gt;  [85]  1.80183617 -2.19582068  0.78347556 -1.36054809 -0.89734522 -1.71618449</span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co">#&gt;  [91]  0.89601284 -1.09680992  0.57884696 -0.44008856  0.99363531  0.10350705</span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="co">#&gt;  [97] -0.34085836 -0.16871614 -0.11511192 -0.55356153</span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="co">#&gt; $uit</span></span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="co">#&gt;   [1] 0.60667794 1.04299159 0.79132301 0.05057380 0.49463827 0.44415481</span></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="co">#&gt;   [7] 0.27695961 0.12435464 0.05960037 0.49045087 0.78180947 0.36248251</span></span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="co">#&gt;  [13] 0.25159222 0.32451277 0.05679171 0.29434681 0.25798081 0.27279882</span></span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="co">#&gt;  [19] 0.09171574 0.06425338 0.13087875 0.34838294 0.27161957 0.06386847</span></span>
+<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a><span class="co">#&gt;  [25] 0.14069095 0.37241455 0.17660677 0.10517001 0.06375750 0.25898529</span></span>
+<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a><span class="co">#&gt;  [31] 0.23329522 0.33285182 0.37847743 0.06019462 0.31892217 0.06581822</span></span>
+<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a><span class="co">#&gt;  [37] 0.14690369 0.30363233 0.17196955 0.11521816 0.18837598 0.16227346</span></span>
+<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a><span class="co">#&gt;  [43] 0.15802541 0.15428072 0.06681714 1.21618328 0.55238904 0.06102099</span></span>
+<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a><span class="co">#&gt;  [49] 0.06235040 0.43300753 0.10201172 0.20424088 0.06956718 0.09310011</span></span>
+<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a><span class="co">#&gt;  [55] 0.16464893 0.39560293 0.06092051 0.67223390 0.08233538 0.19106883</span></span>
+<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a><span class="co">#&gt;  [61] 0.38741734 0.24466487 0.06792872 0.07526973 0.20954746 0.04847670</span></span>
+<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a><span class="co">#&gt;  [67] 2.18397718 0.39898946 0.73812695 0.16877616 0.30838784 0.70409164</span></span>
+<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a><span class="co">#&gt;  [73] 0.32647151 0.05714419 0.32829544 0.06450578 0.19075328 0.21272070</span></span>
+<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a><span class="co">#&gt;  [79] 0.31562673 0.11979394 0.91070795 0.07587423 0.09141283 0.05929885</span></span>
+<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a><span class="co">#&gt;  [85] 0.66276546 0.06948177 0.06700856 0.15959363 0.16042627 0.82982303</span></span>
+<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a><span class="co">#&gt;  [91] 0.09863162 0.12887969 0.40939458 0.23812125 0.06437911 0.23473075</span></span>
+<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a><span class="co">#&gt;  [97] 0.26617320 0.06159585 0.42504619 0.18236847 0.58391846 0.32929542</span></span>
+<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a><span class="co">#&gt; [103] 0.08332999 0.06034655 0.39389924 0.21314531 0.38235647 0.17722827</span></span>
+<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a><span class="co">#&gt; [109] 0.25789296 0.06236108 0.40228168 0.52503303 0.24079981 0.05728709</span></span>
+<span id="cb4-60"><a href="#cb4-60" tabindex="-1"></a><span class="co">#&gt; [115] 0.47799541 0.25229596 0.08531050 0.05804879 0.42329642 0.89391218</span></span>
+<span id="cb4-61"><a href="#cb4-61" tabindex="-1"></a><span class="co">#&gt; [121] 0.09278825 0.08288872 0.07535151 0.10227304 0.19190103 0.09122375</span></span>
+<span id="cb4-62"><a href="#cb4-62" tabindex="-1"></a><span class="co">#&gt; [127] 0.06810039 0.11653725 0.33592221 0.10913790 1.00530606 0.10052835</span></span>
+<span id="cb4-63"><a href="#cb4-63" tabindex="-1"></a><span class="co">#&gt; [133] 0.05466589 0.34155129 0.64769674 0.06180877 0.17748392 0.25096877</span></span>
+<span id="cb4-64"><a href="#cb4-64" tabindex="-1"></a><span class="co">#&gt; [139] 0.22087331 0.43689256 0.46090945 0.13075763 0.05724062 0.63130957</span></span>
+<span id="cb4-65"><a href="#cb4-65" tabindex="-1"></a><span class="co">#&gt; [145] 0.43047709 0.37281496 0.69118993 0.06915782 0.06325268 0.39973948</span></span>
+<span id="cb4-66"><a href="#cb4-66" tabindex="-1"></a><span class="co">#&gt; [151] 0.18294254 0.35849351 0.26510171 0.06008064 0.47041622 0.06286508</span></span>
+<span id="cb4-67"><a href="#cb4-67" tabindex="-1"></a><span class="co">#&gt; [157] 0.18846261 0.09400459 0.18529084 0.55993249 0.44175444 0.32457041</span></span>
+<span id="cb4-68"><a href="#cb4-68" tabindex="-1"></a><span class="co">#&gt; [163] 0.41652553 0.07308628 0.06432250 0.32537986 0.30573476 0.06063566</span></span>
+<span id="cb4-69"><a href="#cb4-69" tabindex="-1"></a><span class="co">#&gt; [169] 0.36595635 0.21573402 0.07569119 0.17878541 0.32925714 0.24564188</span></span>
+<span id="cb4-70"><a href="#cb4-70" tabindex="-1"></a><span class="co">#&gt; [175] 0.06918731 0.57644900 3.55796605 0.98978621 0.04031703 1.52502671</span></span>
+<span id="cb4-71"><a href="#cb4-71" tabindex="-1"></a><span class="co">#&gt; [181] 0.30045742 0.06175721 0.21223631 0.16127288 0.41757997 0.12682680</span></span>
+<span id="cb4-72"><a href="#cb4-72" tabindex="-1"></a><span class="co">#&gt; [187] 0.06033996 0.61432721 0.19555559 0.31074323 0.29766620 0.24410566</span></span>
+<span id="cb4-73"><a href="#cb4-73" tabindex="-1"></a><span class="co">#&gt; [193] 0.07190653 0.07419491 0.12782605 0.06552765 0.27867732 0.14104060</span></span>
+<span id="cb4-74"><a href="#cb4-74" tabindex="-1"></a><span class="co">#&gt; [199] 0.10138593 0.25447488 0.05892076 0.18821584 0.33453962 0.36624999</span></span>
+<span id="cb4-75"><a href="#cb4-75" tabindex="-1"></a><span class="co">#&gt; [205] 0.53146278 0.16180755 0.17109057 0.39138350 0.08473816 0.06650897</span></span>
+<span id="cb4-76"><a href="#cb4-76" tabindex="-1"></a><span class="co">#&gt; [211] 0.07981309 0.06231280 0.18936817 0.63094270 0.34273488 0.08893932</span></span>
+<span id="cb4-77"><a href="#cb4-77" tabindex="-1"></a><span class="co">#&gt; [217] 0.19708976 0.48482098 0.06405937 0.18334942 0.14550662 0.39688223</span></span>
+<span id="cb4-78"><a href="#cb4-78" tabindex="-1"></a><span class="co">#&gt; [223] 0.17706653 0.06183697 0.36394243 0.49698132 0.37764896 0.58905916</span></span>
+<span id="cb4-79"><a href="#cb4-79" tabindex="-1"></a><span class="co">#&gt; [229] 0.21255036 0.05708387 0.25134550 0.43970324 0.30024567 0.25968518</span></span>
+<span id="cb4-80"><a href="#cb4-80" tabindex="-1"></a><span class="co">#&gt; [235] 0.06030242 0.05996110 0.27769412 0.65779803 0.21796624 0.13788410</span></span>
+<span id="cb4-81"><a href="#cb4-81" tabindex="-1"></a><span class="co">#&gt; [241] 0.26473152 0.33417858 0.27996558 0.15681864 0.06230986 0.19115020</span></span>
+<span id="cb4-82"><a href="#cb4-82" tabindex="-1"></a><span class="co">#&gt; [247] 0.30973387 0.08063968 0.18076660 0.06823619 0.47481598 0.10700843</span></span>
+<span id="cb4-83"><a href="#cb4-83" tabindex="-1"></a><span class="co">#&gt; [253] 0.06417076 0.15405140 0.13929154 0.04682472 0.37652930 2.40791755</span></span>
+<span id="cb4-84"><a href="#cb4-84" tabindex="-1"></a><span class="co">#&gt; [259] 0.46625426 0.73942454 0.16717445 0.08005292 0.06522299 0.19169171</span></span>
+<span id="cb4-85"><a href="#cb4-85" tabindex="-1"></a><span class="co">#&gt; [265] 0.54285603 0.32407794 0.29601438 0.06474844 0.07174828 0.58438647</span></span>
+<span id="cb4-86"><a href="#cb4-86" tabindex="-1"></a><span class="co">#&gt; [271] 0.06264418 0.45595226 0.16190325 0.14743680 0.23785140 0.16352107</span></span>
+<span id="cb4-87"><a href="#cb4-87" tabindex="-1"></a><span class="co">#&gt; [277] 0.20278335 0.16557188 0.06765557 0.09968029 0.13080508 0.05898347</span></span>
+<span id="cb4-88"><a href="#cb4-88" tabindex="-1"></a><span class="co">#&gt; [283] 0.84860759 0.11083991 0.32888824 0.04626582 0.54303346 1.99794035</span></span>
+<span id="cb4-89"><a href="#cb4-89" tabindex="-1"></a><span class="co">#&gt; [289] 0.98101610 0.65134456 0.60369919 0.05582433 0.27707317 0.74423077</span></span>
+<span id="cb4-90"><a href="#cb4-90" tabindex="-1"></a><span class="co">#&gt; [295] 0.24891869 0.57213762 0.21437510 0.40852701 0.25550629 0.05869055</span></span>
+<span id="cb4-91"><a href="#cb4-91" tabindex="-1"></a><span class="co">#&gt; [301] 0.61324951 0.05706179 0.47550161 0.38783799 0.20295290 0.56973197</span></span>
+<span id="cb4-92"><a href="#cb4-92" tabindex="-1"></a><span class="co">#&gt; [307] 0.05831963 0.41986159 0.46128253 0.09416404 0.09647414 0.15428648</span></span>
+<span id="cb4-93"><a href="#cb4-93" tabindex="-1"></a><span class="co">#&gt; [313] 0.09450894 0.07180970 0.11938475 0.32415108 0.06642856 0.16532189</span></span>
+<span id="cb4-94"><a href="#cb4-94" tabindex="-1"></a><span class="co">#&gt; [319] 0.17621287 0.09061968 0.14158477 0.23822944 0.13443414 0.09532054</span></span>
+<span id="cb4-95"><a href="#cb4-95" tabindex="-1"></a><span class="co">#&gt; [325] 0.06826615 0.25865037 0.14857130 0.86440832 0.06290912 0.07405062</span></span>
+<span id="cb4-96"><a href="#cb4-96" tabindex="-1"></a><span class="co">#&gt; [331] 0.52040357 0.25021922 0.28117446 0.06051436 0.17478934 0.28994259</span></span>
+<span id="cb4-97"><a href="#cb4-97" tabindex="-1"></a><span class="co">#&gt; [337] 0.44324792 0.05827788 0.36215462 0.41049527 0.06105742 0.51603948</span></span>
+<span id="cb4-98"><a href="#cb4-98" tabindex="-1"></a><span class="co">#&gt; [343] 0.25987779 0.16494258 0.22506812 0.28281428 0.49871072 0.06924873</span></span>
+<span id="cb4-99"><a href="#cb4-99" tabindex="-1"></a><span class="co">#&gt; [349] 0.06956784 0.22639996 0.06003978 0.18450545 0.12372428 0.77616491</span></span>
+<span id="cb4-100"><a href="#cb4-100" tabindex="-1"></a><span class="co">#&gt; [355] 0.19862347 0.23716705 0.05724244 0.58940711 0.48907734 0.33703745</span></span>
+<span id="cb4-101"><a href="#cb4-101" tabindex="-1"></a><span class="co">#&gt; [361] 0.06619598 0.44113742 0.08040360 0.15950142 0.22078796 0.39132497</span></span>
+<span id="cb4-102"><a href="#cb4-102" tabindex="-1"></a><span class="co">#&gt; [367] 0.10043685 0.29157396 0.06336861 0.17395754 0.51890871 0.08621379</span></span>
+<span id="cb4-103"><a href="#cb4-103" tabindex="-1"></a><span class="co">#&gt; [373] 0.17761787 0.09505320 0.06586718 0.06537678 0.20249927 0.10709138</span></span>
+<span id="cb4-104"><a href="#cb4-104" tabindex="-1"></a><span class="co">#&gt; [379] 0.11812644 0.35210674 0.39462140 0.35987948 0.44440621 0.05819291</span></span>
+<span id="cb4-105"><a href="#cb4-105" tabindex="-1"></a><span class="co">#&gt; [385] 0.31854353 0.24954383 0.05920679 0.34185276 0.43844461 0.35400549</span></span>
+<span id="cb4-106"><a href="#cb4-106" tabindex="-1"></a><span class="co">#&gt; [391] 0.14379942 0.20229329 0.36892056 0.06273582 0.27936768 0.17449679</span></span>
+<span id="cb4-107"><a href="#cb4-107" tabindex="-1"></a><span class="co">#&gt; [397] 1.56163587 0.24219974 0.05414208 0.19122011 0.07580156 0.07790761</span></span>
+<span id="cb4-108"><a href="#cb4-108" tabindex="-1"></a><span class="co">#&gt; [403] 0.11079265 0.11489166 0.19193240 0.18232052 0.28315118 0.06350995</span></span>
+<span id="cb4-109"><a href="#cb4-109" tabindex="-1"></a><span class="co">#&gt; [409] 0.23607287 0.22108747 1.04702166 0.15256268 0.05605118 0.52582527</span></span>
+<span id="cb4-110"><a href="#cb4-110" tabindex="-1"></a><span class="co">#&gt; [415] 0.11517149 0.12748838 0.38795566 0.08287095 0.06550233 0.31183644</span></span>
+<span id="cb4-111"><a href="#cb4-111" tabindex="-1"></a><span class="co">#&gt; [421] 0.16259622 0.60981467 0.05390660 0.40562741 1.03600332 2.99361726</span></span>
+<span id="cb4-112"><a href="#cb4-112" tabindex="-1"></a><span class="co">#&gt; [427] 0.03747720 0.50656127 0.27664841 4.47310149 0.90713003 0.07291804</span></span>
+<span id="cb4-113"><a href="#cb4-113" tabindex="-1"></a><span class="co">#&gt; [433] 0.42346435 0.21735166 0.06065659 0.09854367 0.42829140 0.20128779</span></span>
+<span id="cb4-114"><a href="#cb4-114" tabindex="-1"></a><span class="co">#&gt; [439] 0.09888475 0.06529755 0.11476555 0.10993129 0.34438130 0.06677026</span></span>
+<span id="cb4-115"><a href="#cb4-115" tabindex="-1"></a><span class="co">#&gt; [445] 0.11281577 0.09162816 0.17537144 0.27763335 0.36202723 0.06438150</span></span>
+<span id="cb4-116"><a href="#cb4-116" tabindex="-1"></a><span class="co">#&gt; [451] 0.40370101 0.10721378 0.06330134 0.17032752 0.27004843 3.08284729</span></span>
+<span id="cb4-117"><a href="#cb4-117" tabindex="-1"></a><span class="co">#&gt; [457] 0.95627781 1.46409589 0.03316190 5.87864371 0.09701367 0.06941909</span></span>
+<span id="cb4-118"><a href="#cb4-118" tabindex="-1"></a><span class="co">#&gt; [463] 0.08791146 0.14395160 0.29613621 0.07584495 0.37080647 0.06584604</span></span>
+<span id="cb4-119"><a href="#cb4-119" tabindex="-1"></a><span class="co">#&gt; [469] 0.37234286 0.22147787 0.29815368 0.06604520 0.14802735 0.09345180</span></span>
+<span id="cb4-120"><a href="#cb4-120" tabindex="-1"></a><span class="co">#&gt; [475] 0.22635021 0.24874947 0.06307043 0.13167605 0.33931001 0.24346458</span></span>
+<span id="cb4-121"><a href="#cb4-121" tabindex="-1"></a><span class="co">#&gt; [481] 1.03781114 0.07120851 0.69642065 0.05871830 0.12589166 0.40932828</span></span>
+<span id="cb4-122"><a href="#cb4-122" tabindex="-1"></a><span class="co">#&gt; [487] 0.10506009 0.33248017 0.10629102 0.06343326 0.05861485 0.30904578</span></span>
+<span id="cb4-123"><a href="#cb4-123" tabindex="-1"></a><span class="co">#&gt; [493] 0.28975304 0.63270989 0.22904637 0.77464131 0.09229012 0.05917913</span></span>
+<span id="cb4-124"><a href="#cb4-124" tabindex="-1"></a><span class="co">#&gt; [499] 0.39187679 0.18382756</span></span></code></pre></div>
+</div>
+<div id="developing-a-simulation-study-using-il_sfa-and-dgp-functions" class="section level2">
+<h2>Developing a simulation study using <code>il_sfa</code> and
+<code>DGP</code> functions</h2>
+<p>The DGP function can be used to generate data for a simulation study.
+The following steps can be used to reproduce the results in Table 1
+panel (a) Belotti and Ilardi (2018). In particular, the simulation is
+the one considering <span class="math inline">\(N=100\)</span> and <span class="math inline">\(T=5\)</span>.</p>
+<p>The example considers 10 replications only to show that the code is
+quite efficient from a computational point of view. Changing the
+<code>nsim</code> parameter, one can consider a different number of
+replications (the original results are obtained using
+<code>nsim = 1000</code>).</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>para <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="sc">-</span><span class="fl">1.5</span>,<span class="dv">1</span>,<span class="fl">0.25</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>nsimul <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">DGP</span>(N, T, <span class="fu">list</span>(<span class="at">beta=</span>para[<span class="dv">1</span>], <span class="at">sigmav=</span>para[<span class="dv">4</span>], <span class="at">gamma=</span>para[<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]), <span class="at">model =</span> <span class="st">&quot;Exp&quot;</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>           <span class="at">seed.val =</span> <span class="dv">22</span>, <span class="at">nsim =</span> nsimul)</span></code></pre></div>
+<p>The estimation results can then be obtained on the simulated dataset
+saving the point estimates only.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> nsimul, <span class="at">ncol=</span><span class="dv">4</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(res)){</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#  print(i)</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  mle <span class="ot">&lt;-</span> <span class="fu">il_sfa</span>(<span class="at">X =</span> dat<span class="sc">$</span>x, <span class="at">y =</span> dat<span class="sc">$</span>daty[i,], <span class="at">distr =</span> <span class="st">&quot;Exp&quot;</span>, <span class="at">het =</span> <span class="cn">TRUE</span>, <span class="at">z =</span> dat<span class="sc">$</span>datz,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>                <span class="at">group =</span> dat<span class="sc">$</span>g, <span class="at">useHess =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  res[i,] <span class="ot">&lt;-</span> mle<span class="sc">$</span>par</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  }</span></code></pre></div>
+<p>The obtained matrix can be used to compute the Mean Square Error
+(MSE) using a function included in the <code>R</code> source code.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) <span class="fu">print</span>(<span class="fu">MSE</span>(res[,i], para[i]))</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; [1] 0.00101062</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; [1] 0.01824797</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; [1] 0.01385513</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt; [1] 0.0003790434</span></span></code></pre></div>
+<p>To check the goodness of our proposal, we also compared the
+estimation results with a benchmark identified with the results of
+Belotti and Illardi (2018). These results are obtained for the same
+generated datasets in Stata using <code>sftfe</code> function (Belotti
+et al., 2013) and adopting the <code>PDE</code> method. The results are
+collected in the package dataset called
+<code>res_N100_Stata.rda</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">data</span>(res_N100_Stata)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) <span class="fu">print</span>(<span class="fu">MSE</span>(res_N100_Stata[<span class="dv">1</span><span class="sc">:</span>nsimul,i], para[i]))</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; [1] 0.0009249117</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt; [1] 0.02581475</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; [1] 0.02014382</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; [1] 0.000510865</span></span></code></pre></div>
+<p>The estimation results are quite similar, but the IL MSE are always a
+bit lower than the PDE ones.</p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ul>
+<li>Belotti, F., Daidone, S., Ilardi, G., Atella, V. (2013). Stochastic
+frontier analysis using Stata. <em>The Stata Journal</em>,
+<strong>13</strong>, 719–758.</li>
+<li>Belotti, F., &amp; Ilardi, G. (2018). Consistent inference in
+fixed-effects stochastic frontier models. <em>Journal of
+Econometrics</em>, <strong>202</strong>(2), 161–-177.</li>
+<li>Bellio, R., &amp; Grassetti, L. (2023). Efficient estimation of true
+fixed-effects stochastic frontier models. <em>Submitted</em>.</li>
+</ul>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
