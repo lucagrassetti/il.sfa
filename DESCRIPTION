@@ -1,11 +1,11 @@
 Package: ilsfa
 Type: Package
 Title: Integrated Likelihood for True Fixed Effects Stochastic Frontier Analysis
-Version: 0.1.5
+Version: 0.1.7
 Author: Ruggero Bellio and Luca Grassetti
 Maintainer: Luca Grassetti - University of Udine <luca.grassetti@uniud.it>
 Description: This package is a software companion for the paper Bellio and Grassetti (2023), "Efficient estimation of true fixed-effects stochastic frontier models".
-    The included functions allow reproducing all the simulations included in the paper and estimating all the models discussed in it. 
+    The included functions allow for reproducing all the simulations in the paper and estimating all the models discussed in it. 
     In particular, The il.sfa(.) function is used to fit a given set of SF models considering the integrated likelihood approach described in the cited reference.
     The DGP(.) function can be used to mimic the simulation process described in Belotti and Ilardi (2018), "Consistent inference in fixed-effects stochastic frontier models", and also used in Bellio and Grassetti (2023).
     The package also includes a specific dataset collecting the results obtained using Stata command "sftfe" (including the models discussed in Belotti et al. (2013) "Stochastic frontier analysis using Stata"). 
