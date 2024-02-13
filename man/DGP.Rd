@@ -75,9 +75,8 @@ dat <- DGP(N, T, list(beta = para[1], sigmav = para[4], gamma = para[2:3]), mode
 res <- matrix(0, nrow = nsimul, ncol=4)
 for(i in 1:nrow(res)){
   print(i)
-  mydat <- list(y = dat$daty[i,], x = data.frame(dat$x), g = dat$g, z = dat$datz)
-  mle <- il_sfa(X = mydat$x, y = mydat$y, distr = "Exp", het = TRUE, z = mydat$z,
-                group = mydat$g, useHess = TRUE)
+  mle <- il_sfa(X = dat$x, y = dat$daty[i,], distr = "Exp", het = TRUE, z = dat$datz,
+                group = dat$g, useHess = TRUE)
   res[i,] <- mle$par
   }
 # Compute the MSE of the estimates
