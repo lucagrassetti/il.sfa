@@ -14,7 +14,7 @@ il_sfa(
   nq = 25,
   niter = 10,
   init = NULL,
-  Jinit = 5,
+  Kinit = 5,
   initdelta = 0.5,
   useHess = TRUE,
   trace = 0,
@@ -31,57 +31,80 @@ il_sfa(
 
 \item{y}{the vector of the response variable.}
 
-\item{distr}{the distributional form of the efficiency-related error terms (default is Exp).}
+\item{distr}{the distributional form of the efficiency-related error terms (default
+is \code{Exp}).}
 
 \item{het}{a logical indicating the case of heteroscedastic efficiency related error
-terms (default is TRUE, but it works for the Exponential case only).}
+terms (default is \code{TRUE}, but it works for the Exponential case only).}
 
 \item{z}{the vector of values of the variable influencing the efficiency (for the Exponential case only).}
 
 \item{group}{the vector of the grouping variable defining the panel.}
 
-\item{nq}{the number of quadrature points used in the numerical integration routine (default is 25).}
+\item{nq}{the number of quadrature points used in the numerical integration routine
+(default is 25).}
 
-\item{niter}{the number of iterations used in the numerical integration routine for locating the mode (default is 10).}
+\item{niter}{the number of iterations used in the numerical integration routine for
+locating the mode (default is 10).}
 
-\item{init}{the optional vector of initial values for the maximization of integrated likelihood (default is NULL).}
+\item{init}{the optional vector of initial values for the maximization of
+integrated likelihood (default is \code{NULL}).}
 
-\item{useHess}{a logical: if TRUE, the likelihood maximization is initialized with the numerical
-Hessian; otherwise, the Hessian is initialized as a unit diagonal.}
+\item{Kinit}{radius of the interval for the golden-section search for locating
+the mode with respect to \eqn{\alpha_i}. Default is 5.}
 
-\item{trace}{trace parameter used in ucminf function (if trace is positive, then
+\item{initdelta}{initial guess for \eqn{sigma^2}, only used to determine the
+initial parameter \eqn{\mu_G} when \code{initNM = FALSE}. Default is 0.5.}
+
+\item{useHess}{a logical: if \code{TRUE}, the likelihood maximization is initialized
+with the numerical Hessian; otherwise, the Hessian is initialized as a unit diagonal.}
+
+\item{trace}{trace parameter used in \code{ucminf} function (if \code{trace} is positive, then
 detailed tracing information is printed for each iteration).}
 
-\item{grtol}{grtol parameter used in ucminf function (the algorithm stops when
-the largest absolute value of the gradient is less than grtol).}
+\item{int.trace}{a logical for internal tracing. Default is \code{FALSE}.}
 
-\item{grad}{grad parameter used in ucminf function (controls the type
+\item{initNM}{logical for activating the initial parameter search using first
+the exponential model fit result and then the Nelder-Mead method for the
+gamma model (strongly suggested). Detault is \code{TRUE}.}
+
+\item{grtol}{grtol parameter used in ucminf function (the algorithm stops when
+the largest absolute value of the gradient is less than \code{grtol}).}
+
+\item{eps}{tolerance for the gamma estimation process, the default is 10^-4.}
+
+\item{grad}{grad parameter used in \code{ucminf} function (controls the type
 of finite difference approximation to be used for the gradient).}
+
+\item{umeth}{method for locating the mode with respect to \eqn{\alpha_i}.
+Default is \code{GS} for golden-section search, any other value for Newton-Raphson.}
 }
 \value{
 A list including
 
--- the parameters point estimates - \eqn{par},
+-- the parameters point estimates (\code{par}),
 
--- the inverse of the numerical hessian - \eqn{invhes},
+-- the inverse of the numerical hessian (\code{invhes}),
 
--- the standard errors of the estimated parameters - \eqn{se}
+-- the standard errors of the estimated parameters (\code{se})
 
--- the firm specific effects - \eqn{alphai}, and
+-- the firm specific effects (\code{alphai}, still not available for the gamma model), and
 
--- the estimated efficiency related terms -  - \eqn{uit}.
+-- the estimated efficiency related terms (\code{uit}, still not available for the gamma model).
 }
 \description{
 This function adopts the IL approach to the estimation of some kind of SF models
 (see Bellio and Grassetti, 2023) such
-as those based on N-HN, N-Exponential, and N-Gamma error terms convolutions.
+as those based on Normal-Half Normal, N-Exponential, and N-Gamma error terms convolutions.
 The function adopts a consistent and computationally efficient approach to the
 model estimation.
 The model specification is as
 \deqn{y_{ij} = \alpha_i + x_{it}^T\beta - u_{it} + v{it},}
-where the efficiency-related error term can be estimated as \eqn{u_{it} \sim HN(0, \sigma_u^2)},
-\eqn{u_{it} \sim Exp(\sigma_u^2)}, or \eqn{u_{it} \sim Exp(\sigma_{uit}^2)} and
-\eqn{\sigma_{uit} = e^{\gamma_0+\gamma_1z_it}}.
+where the efficiency-related error term can be specified as
+\deqn{u_{it} \sim HN(0, \sigma_u^2),}
+\deqn{u_{it} \sim Exp(\sigma_u^2),}
+\deqn{u_{it} \sim Gamma(\gamma_1, \gamma_2)\mbox{, or}}
+\deqn{u_{it} \sim Exp(\sigma_{uit}^2) \mbox{ with } \sigma_{uit} = e^{\gamma_0+\gamma_1z_it}.}
 The idiosyncratic error term is considered Gaussian and homoscedastic.
 }
 \examples{
