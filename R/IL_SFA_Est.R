@@ -87,6 +87,7 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,
   X_plus <- model.matrix(~factor(group)-1+X)
   ols2 <- RcppEigen::fastLmPure(X_plus, y)
   ols <- list(alpha = ols2$coef[1:max(group)], beta = ols2$coef[max(group)+1], residuals = ols2$residuals)
+  ols$sA <- sqrt(sum(ols$residuals^2) / (nrow(X) - max(group) - 1))
   if(distr == "Exp")
   {
     if(het == TRUE)
