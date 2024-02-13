@@ -288,25 +288,3 @@ double likG(double lnsigma, double lnalpha, double lnlambda,
   }
   return(ll);
 }
-
-//
-// // [[Rcpp::export]]
-// double likGong(double lnsigmaA, double lnmuA, double lnlambda,
-//             Rcpp::List list_eta, Rcpp::List list_y, DoubleVector alphastar)
-// {
-//   int len = list_y.size();
-//   double alpha = exp(lnmuA - lnlambda);
-//   double lambda = exp(lnlambda);
-//   double sigma = sqrt(exp(lnsigmaA * 2.0) - alpha * exp(lnlambda * 2.0));
-//   double ll = 0.0;
-//   for(int i=0; i<len; i++){
-//     DoubleVector etai = list_eta[i];
-//     DoubleVector yi = list_y[i];
-//     int ni = yi.size();
-//     double alphai = alphastar[i] + alpha * lambda;
-//     ll -= logh(alphai, ni, yi, etai, sigma, alpha, lambda);
-//     }
-//   return(ll);
-// }
-//
-
