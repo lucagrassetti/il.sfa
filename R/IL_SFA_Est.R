@@ -30,6 +30,17 @@
 #' the largest absolute value of the gradient is less than grtol).
 #' @param grad grad parameter used in ucminf function (controls the type
 #' of finite difference approximation to be used for the gradient).
+#' @param eps tolerance for the gamma estimation process, the default is 10^-4.
+#' @param Kinit radius of the interval for the golden-section search for locating 
+#' the mode with respect to \eqn{\alpha_i}. Default is 5.
+#' @param umeth method for locating the mode with respect to \eqn{\alpha_i}. 
+#' Default is "GS" for golden-section search, any other value for Newton-Raphson. 
+#' @param initdelta initial guess for \eqn{sigma^2}, only used to determine the 
+#' initial parameter \eqn{\mu_G} when initNM = FALSE. Default is 0.5.
+#' @param int.trace a logical for internal tracing. Default is FALSE.
+#' @param initNM logical for activating the initial parameter search using first 
+#' the exponential model fit result and then 
+#' the Nelder-Mead method for the gamma model (strongly suggested). Detault is TRUE.
 #'
 #' @return A list including
 #' @return -- the parameters point estimates - \eqn{par},
@@ -61,7 +72,7 @@
 #' @export
 il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,
                    nq = 25, niter = 10,
-                   init = NULL, Jinit = 5, #Kinit = 5, ### Jinit e Kinit
+                   init = NULL, Kinit = 5, 
                    initdelta = 0.5, useHess = TRUE,
                    trace = 0, int.trace = FALSE,
                    initNM = TRUE,
@@ -163,7 +174,7 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,
       print("The estimation results are obtained under homoscedasticity assumption.")
       het <- FALSE
       mle <- estim_G(X = X, y = y, group = group,
-                     ols = ols, nq = nq, eps = eps, Kinit = Jinit,
+                     ols = ols, nq = nq, eps = eps, Kinit = Kinit,
                      niter = niter, umeth = umeth, initdelta = initdelta,
                      int.trace = int.trace, init = init,  trace = trace,
                      initNM = initNM,
@@ -173,7 +184,7 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,
       {
         print("Hessian computation failed: using useHess = FALSE")
         mle <- estim_G(X = X, y = y, group = group,
-                       ols = ols, nq = nq, eps = eps, Kinit = Jinit,
+                       ols = ols, nq = nq, eps = eps, Kinit = Kinit,
                        niter = niter, umeth = umeth, initdelta = initdelta,
                        int.trace = int.trace, init = init,  trace = trace,
                        initNM = initNM,
@@ -182,7 +193,7 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,
     } else
     {
       mle <- estim_G(X = X, y = y, group = group,
-                     ols = ols, nq = nq, eps = eps, Kinit = Jinit,
+                     ols = ols, nq = nq, eps = eps, Kinit = Kinit,
                      niter = niter, umeth = umeth, initdelta = initdelta,
                      int.trace = int.trace, init = init,  trace = trace,
                      initNM = initNM,
@@ -192,7 +203,7 @@ il_sfa <- function(X, y, distr = "Exp", het = TRUE, z = NULL, group,
       {
         print("Hessian computation failed: using useHess = FALSE")
         mle <- estim_G(X = X, y = y, group = group,
-                       ols = ols, nq = nq, eps = eps, Kinit = Jinit,
+                       ols = ols, nq = nq, eps = eps, Kinit = Kinit,
                        niter = niter, umeth = umeth, initdelta = initdelta,
                        int.trace = int.trace, init = init,  trace = trace,
                        initNM = initNM,
