@@ -117,9 +117,8 @@ T <- 5
 para <- c(1,-1.5,1,0.25)
 dat <- DGP(N, T, list(beta=para[1], sigmav=para[4], gamma=para[2:3]), model = "Exp",
            seed.val = 22, nsim = 1)
-mydat <- list(y = dat$daty[1,], x = data.frame(dat$x), g = dat$g, z = dat$datz)
-mle <- il_sfa(X = mydat$x, y = mydat$y, distr = "Exp", het = TRUE, z = mydat$z,
-              group = mydat$g, useHess = TRUE)
+mle <- il_sfa(X = dat$x, y = dat$daty[1,], distr = "Exp", het = TRUE, z = dat$datz,
+              group = dat$g, useHess = TRUE)
 mle
 
 }
