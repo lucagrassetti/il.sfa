@@ -12,15 +12,16 @@
 #' @param m the time dimension.
 #' @param param the vector of model parameters (the frontier regression parameters - \eqn{\beta},
 #' the idiosyncratic error variance - \eqn{\sigma_v},
-#' the vector of the parameters describing the efficiency behavior - \eqn{\gamma}). 
-#' \eqn{\gamma} depends on \eqn{u_{it}} distribution choice. 
-#' In the half-normal case, it corresponds to \eqn{\sigma_u}. In the exponential case, it collects 
+#' the vector of the parameters describing the efficiency behavior - \eqn{\gamma}).
+#' \eqn{\gamma} depends on \eqn{u_{it}} distribution choice.
+#' In the half-normal case, it corresponds to \eqn{\sigma_u}. In the exponential case, it collects
 #' \eqn{\gamma_0} and \eqn{\gamma_1} defined in the formula above.
 #' In the gamma case, it corresponds to the shape and scale parameters of the gamma distribution.
 #' @param model the kind of distribution considered to generate the efficiency-related terms.
-#' @param seed.val the seed value used to make the simulations reproducible.
-#' @param nsim an integer indicating the number of simulated datasets.
-#' @param zvar a logical identifying the case in which the efficiency is time variant.
+#' \code{HN}, \code{Exp}, or \code{Gamma} options are available. Default is \code{HN}.
+#' @param seed.val the seed value used to make the simulations reproducible. Default value is 0.
+#' @param nsim an integer indicating the number of simulated datasets. Default value is 1000.
+#' @param zvar a logical identifying the case in which the efficiency is time variant. Default is \code{FALSE}.
 #'
 #' @return a list object including:
 #' @return -- the simulated y vectors (a matrix daty of dimension \eqn{nsim \times n\cdot m}),
@@ -31,15 +32,16 @@
 #'
 #' @description This code allows to reproduce the results in Table 1 panel (a)
 #' Belotti and Ilardi (2018) "Consistent inference in fixed-effects
-#' stochastic frontier models" - The sample size is fixed to N=100 and T=5.
+#' stochastic frontier models". The sample size is fixed to \code{n=100} (individuals)
+#' and \code{m=5} (time points).
 #' The example is limited to 10 replications to make the code
 #' fairly executable. Changing the nsim parameter, one can consider the
-#' original simulation with 1000 replications. set.seed = 22 is used to generate the
+#' original simulation with 1000 replications. \code{set.seed = 22} is used to generate the
 #' data analysed with Stata and R and compared in Bellio and Grassetti (2023).
 #' In the cited papers, the simulations use a number of replications equal to 1000.
-#' The available distributions for the efficiency term are homoscedastic half normal "HN",
-#' homoscedastic and heteroscedastic Exponential ("Exp"),
-#' and homoscedastic Gamma ("Gamma").
+#' The available distributions for the efficiency term are homoscedastic half normal (\code{HN}),
+#' homoscedastic and heteroscedastic Exponential (\code{Exp}),
+#' and homoscedastic Gamma (\code{Gamma}).
 #'
 #' @references Belotti, F., & Ilardi, G. (2018). Consistent inference in
 #' fixed-effects stochastic frontier models. Journal of Econometrics, 202(2), 161--177.

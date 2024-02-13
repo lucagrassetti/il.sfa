@@ -5,6 +5,7 @@ MSE <- function(x, para) mean( (x-para)^2)
 ##########################################################################
 #    HN case
 ##########################################################################
+
 likHNall <- function(para, X, group, list_y, alphainit, niter, ws, nodes){
   p <- ncol(X)
   eta <- as.vector(as.matrix(X) %*% para[1:p])
@@ -23,7 +24,6 @@ likHNall_orig <- function(para, X, group, list_y, alphainit, niter, ws, nodes){
   return(-ll)
 }
 
-## ucminf
 estim_HN <- function(X, y, group, ols, nq = 25, niter = 10,
                          init = NULL, useHess = TRUE,
                         trace = 0, grtol = 10^-6,
@@ -32,7 +32,7 @@ estim_HN <- function(X, y, group, ols, nq = 25, niter = 10,
   p <- ncol(X)
   obj.gh <- statmod::gauss.quad(nq, "hermite")
   ws <- obj.gh$weights * exp(obj.gh$nodes^2)
-  if(is.null(init)) init <- c(ols$beta, 1, 0) # changed initial values
+  if(is.null(init)) init <- c(ols$beta, ols$sA, 0)
   alpha <- ols[1:(length(ols)-p)]
   H <- if(useHess) {numDeriv::hessian(likHNall, init,  X = X, list_y = list_y,  group = group,
                                      alphainit = ols$alpha, niter = niter,
@@ -57,8 +57,6 @@ estim_HN <- function(X, y, group, ols, nq = 25, niter = 10,
   return(out)
 }
 
-## conditional expected value of ui a la Jondrow et al. (1982)
-
 extractUit_HN <- function(para, X, y, group, alphai)
 {
   p <- ncol(X)
@@ -72,8 +70,6 @@ extractUit_HN <- function(para, X, y, group, alphai)
   u_hat <- mu_star + sqrt(sig2_star) * (dnorm(-mu_star/sqrt(sig2_star))/(1 - pnorm(-mu_star/sqrt(sig2_star))))
 }
 
-
-##beta lambda sigma
 getsig <- function(para)
 {
   p <- length(para) - 2
@@ -101,6 +97,7 @@ alphaiHN <- function(para, X, group, list_y, niter, uinit){
 #############################################################
 #    EXP case
 #############################################################
+
 likEHETall <- function(para, X, group, list_y, list_z, alphainit, niter, ws, nodes){
   p <- ncol(X)
   eta <- as.vector(as.matrix(X) %*% para[1:p])
@@ -145,7 +142,6 @@ alphaiEHET <- function(para, X, group, list_y, list_z, niter, uinit){
   return(alphai)
 }
 
-## ucminf
 estim_EHET <- function(X, y, z, group, ols, nq = 25, niter = 10,
                       trace = 0, grtol = 10^-6,
                       init = NULL, useHess = TRUE,
@@ -173,7 +169,6 @@ estim_EHET <- function(X, y, z, group, ols, nq = 25, niter = 10,
   colnames(hes) <- rownames(hes) <- c(colnames(X), "gamma1", "gamma2", "sigma_v")
   out$invhes <- solve(hes)
   out$se <- sqrt(diag(out$invhes))
-#  out$se[p + 3] <- sqrt(exp(out$par[p + 3]*2) * out$se[p + 3]^2)
   names(out$se) <- c(colnames(X), "gamma1", "gamma2", "sigma_v")
   out$alphai <- alphaiEHET(para = ogg$par, X = X, group = group, list_y = list_y,
                     list_z = list_z, niter=niter, uinit = rep(0, length(y)))
@@ -227,7 +222,6 @@ estim_EXP <- function(X, y, group, ols, nq = 25, niter = 10,
   colnames(hes) <- rownames(hes) <- c(colnames(X), "gamma", "sigmav")
   out$invhes = solve(hes)
   out$se <- sqrt(diag(out$invhes))
-#  out$se[p + 2] <- sqrt(exp(out$par[p + 2]*2) * out$se[p + 2]^2)
   names(out$se) <- c(colnames(X), "gamma", "sigma_v")
   out$alphai <- alphaiEHET(para = c(ogg$par[1:p],ogg$par[p+1], 0,ogg$par[p+2]), X = X, group = group, list_y = list_y,
                            list_z = list_z, niter=niter, uinit = rep(0, length(y)))
@@ -239,32 +233,7 @@ estim_EXP <- function(X, y, group, ols, nq = 25, niter = 10,
 #############################################################
 #    Gamma case
 #############################################################
-###Gong-Samaniego: para[1] is log(sigmaA), para[2] is log(muA), para[3] is log(lambda)
-# psGong <- function(para, list_eta, list_y, alphastar){
-#   out <- likGong(para[1], para[2], para[3], list_eta, list_y, alphastar)
-#   alpha <- exp(para[2] - para[3])
-#   sigma <- sqrt(exp(para[1] * 2) - alpha * exp(para[3] * 2))
-#   cat(sigma, alpha, exp(para[3]), "-log=", out, "\n")
-#  return(out)
-# }
 
-#minus log-likelihood for fixed alpha
-# likGamma_alpha <- function(para, alpha, X, group, list_y, ymeans,
-#                            ws, nodes,  Kinit = 5 , eps = 0.0001,
-#                            niter = 10, umeth = "GS",
-#                            trace = FALSE){
-#   p <- ncol(X)
-#   eta <- as.vector(X %*% para[1:p])
-#   list_eta <- split(eta, group)
-#   m0 <- if(umeth == "GS") 0 else 1
-#   ll <- likG(para[p + 1], log(alpha), para[p + 2], list_eta, list_y,
-#               ymeans - Kinit, ymeans + Kinit, eps, ws, nodes, niter, ymeans, m0)
-#   if(trace) cat(c(para[1:p], exp(para[p+1]), alpha, exp(para)[p+2]), "-log=", ll, "\n")
-#   return(-ll)
-# }
-#
-
-## minus log-likelihood: para = beta, sigmaA, muA, lambda
 likGamma <- function(para, X, group, list_y, alphacenter, ws, nodes,
                      Kinit = 5 , eps = 0.0001, trace = FALSE,
                      niter = 10, umeth = "GS"){
@@ -318,7 +287,6 @@ estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
                       Kinit = Kinit, eps = eps, trace = int.trace,
                       control = list(trace = trace, reltol = eps * 10))
     initA <- c(ols$beta, log(ols$sA), mleinit$par)
-#    cat("done", "\n")
   }
   H <- diag(p + 3)
   if(useHess) {
@@ -327,7 +295,6 @@ estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
                          alphacenter = ols$alpha + exp(initA[3]),
                          group = group, ws = ws, nodes = obj.gh$nodes,
                          Kinit = Kinit, eps = eps, trace = int.trace)
-#    cat("done", "\n")
   }
   E <- eigen(H)
   if(min(E$values)<=0) H <- diag(p+3)
@@ -339,7 +306,6 @@ estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
                         group = group, ws = ws, nodes = obj.gh$nodes,
                         Kinit = Kinit, eps = eps, trace = int.trace,
                         control = list(trace = trace, grtol = eps * 10^3, invhessian.lt = L1))
-#  cat("done", "\n")
   out <- mle
   alpha <- exp(mle$par[2 + p] - mle$par[3 + p])
   sigma <- sqrt(exp(mle$par[p + 1] * 2) - alpha * exp(mle$par[p + 3] * 2))
