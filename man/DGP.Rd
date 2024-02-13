@@ -11,9 +11,11 @@ DGP(n, m, param, model = "HN", seed.val = 0, nsim = 1000, zvar = FALSE)
 
 \item{m}{the time dimension.}
 
-\item{param}{the vector of model parameters (the frontier regression parameters - \eqn{\beta},
-the idiosyncratic error variance - \eqn{\sigma_v},
-the vector of the parameters describing the efficiency behaviour - \eqn{\gamma}).}
+\item{param}{the vector of model parameters (the frontier regression parameters \eqn{\beta},
+the idiosyncratic error variance \eqn{\sigma_v},
+the vector of the parameters describing the efficiency behavior \eqn{\gamma}). \eqn{\gamma} depends on \eqn{u_{it}} distribution choice. 
+In the half-normal case, it corresponds to \eqn{\sigma_u}. In the exponential case, it collects \eqn{\gamma_0} and \eqn{\gamma_1} defined in the formula above.
+In the gamma case, it corresponds to .}
 
 \item{model}{the kind of distribution considered to generate the efficiency-related terms.}
 
@@ -43,17 +45,18 @@ stochastic frontier models" - The sample size is fixed to N=100 and T=5.
 The example is limited to 10 replications to make the code
 fairly executable. Changing the nsim parameter, one can consider the
 original simulation with 1000 replications. set.seed = 22 is used to generate the
-data analysed with Stata and R and compared in Bellio and Grassetti (2023).
-In the cited papers, the simulations use a number of replication equal to 1000.
-The available distributions for the efficiency term are: homoschedastic half normal "HN",
+data analyzed with Stata and R and compared in Bellio and Grassetti (2023).
+In the cited papers, the simulations use a number of replications equal to 1000.
+The available distributions for the efficiency term are homoschedastic half-normal ("HN"), 
 homoschedastic and heteroschedastic Exponential ("Exp"),
 and homoschedastic Gamma ("Gamma").
 }
 \details{
 The DGP is defined as
 \deqn{y_{it} = \alpha_i + x_{it}^T \beta - u_{it} + v_{it}}
-where \eqn{u_{it}} can be Half-Normal or Exponential and in this last
-case can also consider the mean of the Exponential distribution as
+where the distribution of \eqn{u_{it}} can be Half-Normal, 
+Gamma, or Exponential. In this last
+case, the mean of the Exponential distribution can be defined as
 \deqn{\sigma_{uit} = \exp\left(\gamma_0 + \gamma_1 z_{it}\right).}
 This last definition also brings to time-constant cases when
 \eqn{z_{it}} is considered constant over time.
