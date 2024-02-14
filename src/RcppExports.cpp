@@ -143,6 +143,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Euy
+double Euy(double y, double mu, double sigma, double alpha, double lambda, double logden);
+RcppExport SEXP _ilsfa_Euy(SEXP ySEXP, SEXP muSEXP, SEXP sigmaSEXP, SEXP alphaSEXP, SEXP lambdaSEXP, SEXP logdenSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< double >::type logden(logdenSEXP);
+    rcpp_result_gen = Rcpp::wrap(Euy(y, mu, sigma, alpha, lambda, logden));
+    return rcpp_result_gen;
+END_RCPP
+}
 // logh_G
 double logh_G(double u, int m, DoubleVector y, DoubleVector eta, double sigma, double alpha, double lambda);
 RcppExport SEXP _ilsfa_logh_G(SEXP uSEXP, SEXP mSEXP, SEXP ySEXP, SEXP etaSEXP, SEXP sigmaSEXP, SEXP alphaSEXP, SEXP lambdaSEXP) {
@@ -157,6 +173,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
     rcpp_result_gen = Rcpp::wrap(logh_G(u, m, y, eta, sigma, alpha, lambda));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Euyall
+DoubleVector Euyall(double sigma, double alpha, double lambda, Rcpp::List list_eta, Rcpp::List list_y, DoubleVector alphavec);
+RcppExport SEXP _ilsfa_Euyall(SEXP sigmaSEXP, SEXP alphaSEXP, SEXP lambdaSEXP, SEXP list_etaSEXP, SEXP list_ySEXP, SEXP alphavecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type list_eta(list_etaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type list_y(list_ySEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type alphavec(alphavecSEXP);
+    rcpp_result_gen = Rcpp::wrap(Euyall(sigma, alpha, lambda, list_eta, list_y, alphavec));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -262,7 +294,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ilsfa_getEffectsEHET", (DL_FUNC) &_ilsfa_getEffectsEHET, 7},
     {"_ilsfa_dnormgam", (DL_FUNC) &_ilsfa_dnormgam, 5},
     {"_ilsfa_Ii12", (DL_FUNC) &_ilsfa_Ii12, 5},
+    {"_ilsfa_Euy", (DL_FUNC) &_ilsfa_Euy, 6},
     {"_ilsfa_logh_G", (DL_FUNC) &_ilsfa_logh_G, 7},
+    {"_ilsfa_Euyall", (DL_FUNC) &_ilsfa_Euyall, 6},
     {"_ilsfa_logHess", (DL_FUNC) &_ilsfa_logHess, 7},
     {"_ilsfa_getEffectsG", (DL_FUNC) &_ilsfa_getEffectsG, 7},
     {"_ilsfa_minlogh", (DL_FUNC) &_ilsfa_minlogh, 7},

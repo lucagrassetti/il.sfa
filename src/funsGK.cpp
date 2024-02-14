@@ -63,6 +63,28 @@ public:
 };
 
 
+//for E(u|y)
+class IntegGNU: public Numer::Func {
+private:
+  double mu;
+  double sigma;
+  double alpha;
+  double lambda;
+  double y;
+  double logden; //log f(y)
+public:
+  IntegGNU(double mu_, double sigma_, double alpha_, double lambda_, double y_, double logden_) : mu(mu_), sigma(sigma_), alpha(alpha_), lambda(lambda_), y(y_), logden(logden_) {}
+
+  double operator()(const double& x) const
+  {
+    double som = 0;
+    som += R::dnorm(y, mu - x,  sigma, 1) + R::dgamma(x, alpha, lambda, 1);
+    return exp(som - logden) * x;
+  }
+};
+
+
+
 // [[Rcpp::plugins(cpp11)]]
 template<class T> class trans_func: public T {
 public:
@@ -116,6 +138,22 @@ DoubleVector Ii12(double y, double mu, double sigma, double alpha, double lambda
 
 
 // [[Rcpp::export]]
+double Euy(double y, double mu, double sigma, double alpha, double lambda, double logden)
+{
+  trans_func<IntegGNU> f(mu, sigma, alpha, lambda, y, logden);
+  double err_est;
+  int err_code;
+  int subdiv = 100;
+  double eps_abs = 0.00000001; //maybe even too small
+  double eps_rel = 0.000001;   //same here
+  const Numer::Integrator<double>::QuadratureRule rule = Numer::Integrator<double>::GaussKronrod61;
+  const double result = Numer::integrate(f, 0, 1, err_est, err_code, subdiv, eps_abs, eps_rel,
+                                         rule);
+  return result;
+}
+
+
+// [[Rcpp::export]]
 double logh_G(double u, int m, DoubleVector y, DoubleVector eta, double sigma, double alpha, double lambda)
 {
   double f = 0.0;
@@ -129,6 +167,31 @@ double logh_G(double u, int m, DoubleVector y, DoubleVector eta, double sigma, d
 
 
 
+// [[Rcpp::export]]
+DoubleVector Euyall(double sigma, double alpha, double lambda, Rcpp::List list_eta, Rcpp::List list_y, DoubleVector alphavec)
+{
+  int len = list_y.size();
+  int n = 0;
+  for(int i=0; i<len; i++){
+    DoubleVector yi = list_y[i];
+    int ni = yi.size();
+    n += ni;
+  }
+  DoubleVector  out (n);
+  int ind = 0;
+  for(int i=0; i<len; i++){
+    DoubleVector yi = list_y[i];
+    DoubleVector etai = list_eta[i];
+    int ni = yi.size();
+    for (int j=0; j<ni; j++){
+      int mu = etai[j] + alphavec[i];
+      double logden = dnormgam(yi[j], mu, sigma, alpha, lambda);
+      out[ind] = Euy(yi[j], mu, sigma, alpha, lambda, logden);
+      ind += 1;
+      }
+    }
+  return(out);
+}
 
 
 // [[Rcpp::export]]
