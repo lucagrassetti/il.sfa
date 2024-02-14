@@ -93,7 +93,7 @@ A list including
 -- the estimated efficiency related terms (\code{uit}, yet not available for the gamma model).
 }
 \description{
-This function adopts the IL approach to the estimation of some kind of SF models
+This function adopts the Integrated Likelihood (IL) approach to the estimation of some kind of SF models
 (see Bellio and Grassetti, 2023) such
 as those based on Normal-Half Normal, N-Exponential, and N-Gamma error terms convolutions.
 The function adopts a consistent and computationally efficient approach to the
