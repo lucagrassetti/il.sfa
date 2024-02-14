@@ -33,8 +33,16 @@ Ii12 <- function(y, mu, sigma, alpha, lambda) {
     .Call(`_ilsfa_Ii12`, y, mu, sigma, alpha, lambda)
 }
 
+Euy <- function(y, mu, sigma, alpha, lambda, logden) {
+    .Call(`_ilsfa_Euy`, y, mu, sigma, alpha, lambda, logden)
+}
+
 logh_G <- function(u, m, y, eta, sigma, alpha, lambda) {
     .Call(`_ilsfa_logh_G`, u, m, y, eta, sigma, alpha, lambda)
+}
+
+Euyall <- function(sigma, alpha, lambda, list_eta, list_y, alphavec) {
+    .Call(`_ilsfa_Euyall`, sigma, alpha, lambda, list_eta, list_y, alphavec)
 }
 
 logHess <- function(u, m, y, eta, sigma, alpha, lambda) {

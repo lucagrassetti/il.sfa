@@ -326,8 +326,11 @@ estim_G <- function(X, y, group, ols, nq = 25, eps = 10^-4, Kinit = 5,
   out$invhes = solve(hes)
   out$se <- sqrt(diag(out$invhes))
   names(out$se) <- c(colnames(X), "lnsigmaA", "lnmuA", "lnlambda")
+  out$uit <- extractUit_G(para = out$paraorig, X = X, list_y = list_y,
+                          group = group, alphai = out$alphai)
 
-  out2 <- list(par = out$par, invhes = out$invhes, se = out$se, alphai = out$alphai)
+  out2 <- list(par = out$par, invhes = out$invhes, se = out$se,
+               alphai = out$alphai, uit = out$uit)
   return(out2)
 }
 
@@ -341,5 +344,19 @@ alphaiGamma <- function(para, X, group, list_y, niter, uinit){
   alphai <- getEffectsG(lnsigma, lnlambda, lnalpha, list_eta, list_y,
                          niter, uinit)
   return(alphai)
+}
+
+#alphavec is  the vector of estimated alphas
+#colnames(X), "sigma", "gamma", "lambda"
+extractUit_G <- function(para, X, group, list_y, alphai)
+{
+  p <- ncol(X)
+  eta <- as.vector(X %*% para[1:p])
+  list_eta <- split(eta, group)
+  alpha <- para[p + 2]
+  sigma <- para[p + 1]
+  lambda <- para[p + 3]
+  out <- Euyall(sigma, alpha, lambda, list_eta, list_y, alphai)
+  return(out)
 }
 
